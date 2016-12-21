@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -15,6 +16,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
             android:name="net.nrask.voidlockscreen.activities.LockscreenActivity"
             android:theme="@style/Theme.Transparent">
             <intent-filter>

@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/lock_screen_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000">
 
-    <Button
+    <TextView
         android:text="UNLOCK"
-        android:onClick="onUnlock"
+        android:textSize="60sp"
         android:layout_centerInParent="true"
-        android:layout_width="100dp"
-        android:layout_height="50dp"/>
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-    <android.support.v7.widget.AppCompatImageView
-        app:srcCompat="@drawable/ic_white_circle"
-        android:id="@+id/circle_unlock_container"
-        android:layout_width="@dimen/lockscreen_ac_display_unlock_distance"
-        android:layout_height="@dimen/lockscreen_ac_display_unlock_distance" />
+
+
 
 </RelativeLayout>

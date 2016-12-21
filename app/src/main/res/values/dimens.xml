@@ -3,5 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="lockscreen_ac_display_unlock_distance">100dp</dimen>
+    <dimen name="lockscreen_ac_display_unlock_distance">110dp</dimen>
+    <dimen name="lockscreen_ac_display_unlock_distance_max">1000dp</dimen>
+
 </resources>

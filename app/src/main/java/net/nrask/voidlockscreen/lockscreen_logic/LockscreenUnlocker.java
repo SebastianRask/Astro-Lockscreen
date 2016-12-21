@@ -1,10 +1,13 @@
 package net.nrask.voidlockscreen.lockscreen_logic;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+
+import net.nrask.voidlockscreen.activities.LockscreenActivity;
 
 /**
  * Created by Sebastian Rask on 20-12-2016.
@@ -12,9 +15,9 @@ import android.widget.RelativeLayout;
 
 public abstract class LockscreenUnlocker {
 	protected RelativeLayout lockscreenContainer;
-	protected Context context;
+	protected Activity context;
 
-	public LockscreenUnlocker(RelativeLayout lockscreenContainer, Context context) {
+	public LockscreenUnlocker(RelativeLayout lockscreenContainer, Activity context) {
 		this.lockscreenContainer = lockscreenContainer;
 		this.context = context;
 	}
@@ -45,5 +48,13 @@ public abstract class LockscreenUnlocker {
 		params.width = width;
 
 		view.setLayoutParams(params);
+	}
+
+	protected void unlock() {
+		if (context instanceof LockscreenActivity) {
+			((LockscreenActivity) context).unlock();
+		} else {
+			context.finish();
+		}
 	}
 }

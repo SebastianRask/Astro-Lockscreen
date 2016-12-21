@@ -7,6 +7,7 @@ import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.os.Bundle;
 import android.util.Log;
@@ -69,7 +70,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 
 		// Unfortunately the flags WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD are not working on some devices (Thanks Samsung!)
 		// So to be sure the keyguard is disabled, we disable the keyguard using this deprecated method
-		// Or you might want to specifically ask users to disable their system screen lock to get the best experience
+		// Or you might want to specifically ask users to disable their system screen ic_lock_black to get the best experience
 		((KeyguardManager) getSystemService(KEYGUARD_SERVICE)).newKeyguardLock("IN").disableKeyguard();
 
 		getWindow().setAttributes(localLayoutParams);
@@ -94,12 +95,16 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 		}
 	}
 
-	public void onUnlock(View view) {
+	public void unlock() {
 		// Simple unlock by finishing activity and removing views
 		windowManager.removeView(wrapperView);
 		wrapperView.removeAllViews();
 
 		finish();
+	}
+
+	public void onUnlock(@Nullable View view) {
+		unlock();
 	}
 
 	@Override
@@ -108,7 +113,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 			return false;
 		}
 
-		Log.d(getClass().getSimpleName(), "TOUCH");
+		//Log.d(getClass().getSimpleName(), "TOUCH");
 
 		switch (motionEvent.getAction()) {
 			case MotionEvent.ACTION_DOWN:
