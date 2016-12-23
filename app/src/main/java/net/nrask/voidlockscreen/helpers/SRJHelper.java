@@ -73,6 +73,16 @@ public class SRJHelper {
 	}
 
 	/**
+	 * Vibrate the device with a specific pattern. First long is wait time
+	 * @param pattern The pattern in ms
+	 * @param context
+	 */
+	public static void vibratePattern(long[] pattern, Context context) {
+		Vibrator v = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+		v.vibrate(pattern, -1);
+	}
+
+	/**
 	 * Creates and returns an intent that navigates the user to the Google Play landing page for the app
 	 * @return The intent
 	 */

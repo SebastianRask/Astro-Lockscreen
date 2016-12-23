@@ -1,24 +1,35 @@
 package net.nrask.voidlockscreen.activities;
 
+import android.Manifest;
+import android.animation.Animator;
 import android.app.Activity;
 import android.app.KeyguardManager;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
+import android.hardware.fingerprint.FingerprintManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.CancellationSignal;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import net.nrask.voidlockscreen.R;
-import net.nrask.voidlockscreen.lockscreen_logic.AcDisplayLockscreen;
-import net.nrask.voidlockscreen.lockscreen_logic.LockscreenUnlocker;
+import net.nrask.voidlockscreen.backgrounds.LockscreenBackground;
+import net.nrask.voidlockscreen.backgrounds.SensorBackground;
+import net.nrask.voidlockscreen.helpers.UtilHelper;
+import net.nrask.voidlockscreen.unlockers.AcDisplayLockscreen;
+import net.nrask.voidlockscreen.unlockers.LockscreenUnlocker;
 import net.nrask.voidlockscreen.services.StartLockscreenService;
 import net.nrask.voidlockscreen.SRJService;
 
@@ -29,6 +40,8 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	public RelativeLayout wrapperView;
 
 	private LockscreenUnlocker unlocker;
+	private LockscreenBackground background;
+	private CancellationSignal cancellationSignal = new CancellationSignal();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +65,18 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 		} else {
 			//Todo: Permission was denied. Show user that permission is absolutely needed.
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		listenForFingerPrintAuth();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		cancellationSignal.cancel();
 	}
 
 	private void showLockScreen() {
@@ -83,6 +108,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 		windowManager = ((WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE));
 		windowManager.addView(wrapperView, localLayoutParams);
 
+		background = new SensorBackground(this, wrapperView);
 		unlocker = new AcDisplayLockscreen(wrapperView, this);
 	}
 
@@ -97,14 +123,98 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 
 	public void unlock() {
 		// Simple unlock by finishing activity and removing views
-		windowManager.removeView(wrapperView);
-		wrapperView.removeAllViews();
+		wrapperView.animate().alpha(0f).setDuration(340).setListener(new Animator.AnimatorListener() {
+			@Override
+			public void onAnimationStart(Animator animator) {
 
-		finish();
+			}
+
+			@Override
+			public void onAnimationEnd(Animator animator) {
+				removeAndFinish();
+			}
+
+			@Override
+			public void onAnimationCancel(Animator animator) {
+				removeAndFinish();
+			}
+
+			@Override
+			public void onAnimationRepeat(Animator animator) {
+
+			}
+		}).start();
+
 	}
 
-	public void onUnlock(@Nullable View view) {
-		unlock();
+	private void removeAndFinish() {
+		try {
+			windowManager.removeView(wrapperView);
+			wrapperView.removeAllViews();
+			finish();
+		} catch (Exception e) {
+			e.printStackTrace();
+			finish();
+		}
+	}
+
+	protected void tooManyFingerPrintTries() {
+		cancellationSignal.cancel();
+	}
+
+	protected void listenForFingerPrintAuth() {
+		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M) {
+			return;
+		}
+
+		//KeyguardManager KeyguardManager = context.getSystemService(KeyguardManager.class);
+		FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(Context.FINGERPRINT_SERVICE);
+
+		//ToDo: Don't do this here. Move to settings activity
+		if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+			Log.d(getClass().getSimpleName(), "Checking permission");
+			ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.USE_FINGERPRINT}, 200);
+
+			return;
+		}
+
+		if (!fingerprintManager.isHardwareDetected() || !fingerprintManager.hasEnrolledFingerprints()) {
+			return;
+		}
+
+		fingerprintManager.authenticate(null, cancellationSignal, 0, new FingerprintManager.AuthenticationCallback() {
+			@Override
+			public void onAuthenticationError(int errorCode, CharSequence errString) {
+				super.onAuthenticationError(errorCode, errString);
+				Log.d(getClass().getSimpleName(), "Finger Auth error " + errorCode + "\n" + errString);
+
+				tooManyFingerPrintTries();
+			}
+
+			@Override
+			public void onAuthenticationHelp(int helpCode, CharSequence helpString) {
+				super.onAuthenticationHelp(helpCode, helpString);
+				Toast.makeText(getBaseContext(), helpString, Toast.LENGTH_LONG).show();
+			}
+
+			@Override
+			public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
+				super.onAuthenticationSucceeded(result);
+				Log.d(getClass().getSimpleName(), "Finger Auth success");
+				UtilHelper.vibrateSucces(getBaseContext());
+				unlocker.unlockNoTouch();
+			}
+
+			@Override
+			public void onAuthenticationFailed() {
+				super.onAuthenticationFailed();
+				UtilHelper.vibrateError(getBaseContext());
+				listenForFingerPrintAuth();
+
+				Log.d(getClass().getSimpleName(), "Finger Auth failed");
+
+			}
+		}, null);
 	}
 
 	@Override
