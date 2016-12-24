@@ -4,10 +4,12 @@ import android.Manifest;
 import android.animation.Animator;
 import android.app.Activity;
 import android.app.KeyguardManager;
+import android.app.WallpaperManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.Drawable;
 import android.hardware.fingerprint.FingerprintManager;
 import android.net.Uri;
 import android.os.Build;
@@ -32,6 +34,7 @@ import net.nrask.voidlockscreen.unlockers.AcDisplayLockscreen;
 import net.nrask.voidlockscreen.unlockers.LockscreenUnlocker;
 import net.nrask.voidlockscreen.services.StartLockscreenService;
 import net.nrask.voidlockscreen.SRJService;
+import net.nrask.voidlockscreen.views.InterceptingRelativeLayout;
 
 public class LockscreenActivity extends Activity implements View.OnTouchListener {
 	private boolean checkingDrawPermission = false;
@@ -101,7 +104,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 		getWindow().setAttributes(localLayoutParams);
 		getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
-		wrapperView = new RelativeLayout(getBaseContext());
+		wrapperView = new InterceptingRelativeLayout(getBaseContext());
 		wrapperView.setOnTouchListener(this);
 		View.inflate(this, R.layout.lock_screen, wrapperView);
 
