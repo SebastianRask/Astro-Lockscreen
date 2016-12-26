@@ -8,7 +8,11 @@ import android.widget.RelativeLayout;
  */
 
 public class LockscreenBackground {
+
 	public LockscreenBackground(Activity activity, RelativeLayout container) {
 
 	}
+
+	public void activityResumed() {}
+	public void activityPaused() {}
 }

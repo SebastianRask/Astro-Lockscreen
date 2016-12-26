@@ -5,6 +5,7 @@ import android.animation.Animator;
 import android.app.Activity;
 import android.app.KeyguardManager;
 import android.app.WallpaperManager;
+import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -74,12 +75,14 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	protected void onResume() {
 		super.onResume();
 		listenForFingerPrintAuth();
+		background.activityResumed();
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
 		cancellationSignal.cancel();
+		background.activityPaused();
 	}
 
 	private void showLockScreen() {
@@ -169,8 +172,6 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 		if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.M) {
 			return;
 		}
-
-		//KeyguardManager KeyguardManager = context.getSystemService(KeyguardManager.class);
 		FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(Context.FINGERPRINT_SERVICE);
 
 		//ToDo: Don't do this here. Move to settings activity
@@ -185,7 +186,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 			return;
 		}
 
-		fingerprintManager.authenticate(null, cancellationSignal, 0, new FingerprintManager.AuthenticationCallback() {
+		fingerprintManager.authenticate(null, cancellationSignal = new CancellationSignal(), 0, new FingerprintManager.AuthenticationCallback() {
 			@Override
 			public void onAuthenticationError(int errorCode, CharSequence errString) {
 				super.onAuthenticationError(errorCode, errString);

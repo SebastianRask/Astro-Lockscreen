@@ -5,23 +5,16 @@ import android.app.WallpaperManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.ShapeDrawable;
-import android.graphics.drawable.shapes.OvalShape;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -38,6 +31,7 @@ import static android.content.Context.SENSOR_SERVICE;
 public class SensorBackground extends LockscreenBackground implements SensorEventListener {
 	private SensorManager sensorManager;
 
+	private float parallaxFactor = 0.1f;
 	private float x = 0;
 
 	private RelativeLayout lockscreenContainer;
@@ -51,7 +45,6 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 		this.lockscreenContainer = lockscreenContainer;
 
 		sensorManager = (SensorManager) activity.getSystemService(SENSOR_SERVICE);
-		sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
 
 		View.inflate(activity, R.layout.background_sensor_parallax, lockscreenContainer);
 		backgroundImage = (ImageView) lockscreenContainer.findViewById(R.id.background_image);
@@ -62,32 +55,52 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 		Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.phonewallpaper4, options);
 		//backgroundImage.setImageBitmap(bitmap);
 
-		setSystemAsBackground(activity);
+		int imageWidth = setSystemAsBackground(activity);
+
+		//If the width of the image is less than the width of the screen, then parallax is not possible. So remove the image from the scrollview and add it to the container instead.
+		if (imageWidth < SRJHelper.getScreenWidth(activity)) {
+			scrollView.removeView(backgroundImage);
+			lockscreenContainer.addView(backgroundImage);
+			backgroundImage.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+		} else {
+			scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+				@Override
+				public void onGlobalLayout() {
+					scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+					x = backgroundImage.getWidth() / 2;
+					scrollView.setScrollX((int) (x * parallaxFactor));
+				}
+			});
+		}
 	}
 
-	private double imageWidth;
-	private void setSystemAsBackground(Context context) {
-		final View background = lockscreenContainer;
+	@Override
+	public void activityResumed() {
+		super.activityResumed();
+		sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
+	}
+
+	@Override
+	public void activityPaused() {
+		super.activityPaused();
+		sensorManager.unregisterListener(this);
+	}
+
+	private int setSystemAsBackground(Context context) {
 		WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
 		final Drawable wallpaperDrawable = wallpaperManager.getDrawable();
-		background.post(new Runnable() {
-			@Override
-			public void run() {
-				//background.setBackground(wallpaperDrawable);
-			}
-		});
+
+		BitmapDrawable wallpaperBitmap = (BitmapDrawable) wallpaperDrawable;
+		int width = wallpaperBitmap.getBitmap().getWidth();
+		int height = wallpaperBitmap.getBitmap().getHeight();
 
 		backgroundImage.setImageDrawable(wallpaperDrawable);
-		BitmapDrawable bd = (BitmapDrawable) wallpaperDrawable;
-		double imageHeight = bd.getBitmap().getHeight();
-		imageWidth = bd.getBitmap().getWidth();
-		double aspect = imageWidth/imageHeight;
+		return width;
 	}
-
 
 	@Override
 	public void onSensorChanged(SensorEvent event) {
-		float parallaxFactor = 0.1f;
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
 			float xDiff = event.values[0];

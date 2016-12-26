@@ -456,6 +456,16 @@ public class SRJHelper {
 		return displayMetrics.heightPixels;
 	}
 
+	/**
+	 * Returns the width of the device screen
+	 */
+	public static int getScreenWidth(Context context) {
+		WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+		final DisplayMetrics displayMetrics = new DisplayMetrics();
+		wm.getDefaultDisplay().getMetrics(displayMetrics);
+		return displayMetrics.widthPixels;
+	}
+
 	public static boolean isVertical(Context aContext) {
 		int orientation = aContext.getResources().getConfiguration().orientation;
 		if (orientation == Configuration.ORIENTATION_PORTRAIT) {

@@ -12,13 +12,13 @@ import net.nrask.voidlockscreen.helpers.SRJHelper;
  * Created by Sebastian Rask Jepsen (SRJ@Idealdev.dk) on 23/12/16.
  */
 
-public abstract class LockscreenMotionListener {
+public abstract class MotionListener {
 	protected RelativeLayout lockscreenContainer;
 	protected Activity context;
 
-	public LockscreenMotionListener(RelativeLayout lockscreenContainer, Activity context) {
+	public MotionListener(RelativeLayout lockscreenContainer, Activity activity) {
 		this.lockscreenContainer = lockscreenContainer;
-		this.context = context;
+		this.context = activity;
 	}
 
 	public abstract void onUserTouchDown(MotionEvent motionEvent);
