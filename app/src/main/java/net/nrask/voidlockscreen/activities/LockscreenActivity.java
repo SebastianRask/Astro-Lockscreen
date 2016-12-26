@@ -30,6 +30,8 @@ import android.widget.Toast;
 import net.nrask.voidlockscreen.R;
 import net.nrask.voidlockscreen.backgrounds.LockscreenBackground;
 import net.nrask.voidlockscreen.backgrounds.SensorBackground;
+import net.nrask.voidlockscreen.clocks.LockscreenClock;
+import net.nrask.voidlockscreen.clocks.SimpleClock;
 import net.nrask.voidlockscreen.helpers.UtilHelper;
 import net.nrask.voidlockscreen.unlockers.AcDisplayLockscreen;
 import net.nrask.voidlockscreen.unlockers.LockscreenUnlocker;
@@ -115,6 +117,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 		windowManager.addView(wrapperView, localLayoutParams);
 
 		background = new SensorBackground(this, wrapperView);
+		LockscreenClock clock = new SimpleClock(wrapperView, this);
 		unlocker = new AcDisplayLockscreen(wrapperView, this);
 	}
 

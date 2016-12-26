@@ -2,8 +2,12 @@ package net.nrask.voidlockscreen.clocks;
 
 import android.app.Activity;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextClock;
+import android.widget.TextView;
 
+import net.nrask.voidlockscreen.R;
 import net.nrask.voidlockscreen.unlockers.MotionListener;
 
 /**

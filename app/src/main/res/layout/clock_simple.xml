@@ -1,7 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/clock_container"
+    android:layout_centerHorizontal="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-</LinearLayout>
+    <TextClock
+        android:id="@+id/text_clock"
+        android:format12Hour="h:mm"
+        android:format24Hour="HH:mm"
+        android:includeFontPadding="false"
+        android:fontFamily="@string/font_roboto_thin"
+        android:textSize="@dimen/clock_simple_digits"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextClock
+        android:id="@+id/text_am_pm_indicator"
+        android:visibility="gone"
+        android:format24Hour="@null"
+        android:format12Hour="a"
+        android:includeFontPadding="false"
+        android:fontFamily="@string/font_roboto_thin"
+        android:textSize="@dimen/clock_simple_am_pm_indicator"
+        android:layout_toEndOf="@+id/text_clock"
+        android:layout_alignTop="@+id/text_clock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/text_date"
+        android:textSize="@dimen/clock_simple_date"
+        android:fontFamily="@string/font_roboto_thin"
+        android:layout_below="@+id/text_clock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</RelativeLayout>

@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">0VoidLock</string>
+
+    <!-- Fonts -->
+    <string name="font_roboto_thin">sans-serif-thin</string>
+    <string name="font_roboto_regular">sans-serif</string>
+    <string name="font_roboto_mono">monospace</string>
+    <string name="font_roboto_medium">sans-serif-medium</string>
+    <string name="font_roboto_light">sans-serif-light</string>
+    <string name="font_roboto_condensed">sans-serif-condensed</string>
+
 </resources>

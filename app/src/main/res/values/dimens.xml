@@ -6,4 +6,8 @@
     <dimen name="lockscreen_ac_display_unlock_distance">110dp</dimen>
     <dimen name="lockscreen_ac_display_unlock_distance_max">1000dp</dimen>
 
+    <dimen name="clock_simple_digits">80sp</dimen>
+    <dimen name="clock_simple_am_pm_indicator">20dp</dimen>
+    <dimen name="clock_simple_date">30dp</dimen>
+
 </resources>
