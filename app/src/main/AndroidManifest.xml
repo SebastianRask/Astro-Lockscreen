@@ -16,20 +16,19 @@
         android:launchMode="singleTop"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".activities.LockscreenActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent">
+        </activity>
+        <activity android:name=".activities.StartUpActivity">
+        </activity>
+        <activity android:name=".activities.SetupActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-
-        <activity
-            android:name=".activities.StartUpActivity">
         </activity>
 
         <receiver android:name=".receivers.StartLockscreenReceiver">
@@ -39,8 +38,13 @@
         </receiver>
 
         <service android:name=".services.StartLockscreenService"/>
-
-
+        <service
+            android:name=".services.NotificationReaderService"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
     </application>
-
 </manifest>

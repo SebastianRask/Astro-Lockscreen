@@ -83,11 +83,11 @@ public class AcDisplayLockscreen extends LockscreenUnlocker {
 
 		unlockOnUp = distance > unlockDistance;
 		if (unlockOnUp && !hasVibrated) {
-			SRJHelper.vibrate(20, context);
+			SRJHelper.vibrate(20, activity);
 			hasVibrated = true;
 		}
 
-		float scale = distance/(context.getResources().getDimensionPixelSize(R.dimen.lockscreen_ac_display_unlock_distance_max));
+		float scale = distance/(activity.getResources().getDimensionPixelSize(R.dimen.lockscreen_ac_display_unlock_distance_max));
 
 		dimView.animate().alpha(scale/maxAlpha).setDuration(0).start();
 
@@ -108,7 +108,7 @@ public class AcDisplayLockscreen extends LockscreenUnlocker {
 
 	@Override
 	protected void unlock() {
-		int size = (int) (SRJHelper.getScreenHeight(context) * 2);
+		int size = (int) (SRJHelper.getScreenHeight(activity) * 2);
 		int duration = 440;
 		int alphaDuration = 340;
 

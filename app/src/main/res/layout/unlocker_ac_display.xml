@@ -17,7 +17,7 @@
         app:srcCompat="@drawable/ic_lock_black"
         android:layout_centerInParent="true"
         android:id="@+id/img_unlock_lock"
-        android:layout_width="25dp"
-        android:layout_height="25dp" />
+        android:layout_width="@dimen/lockscreen_ac_display_unlock_distance"
+        android:layout_height="@dimen/lockscreen_ac_display_unlock_distance" />
 
 </RelativeLayout>

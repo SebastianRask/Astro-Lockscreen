@@ -6,8 +6,19 @@
     <dimen name="lockscreen_ac_display_unlock_distance">110dp</dimen>
     <dimen name="lockscreen_ac_display_unlock_distance_max">1000dp</dimen>
 
+
     <dimen name="clock_simple_digits">80sp</dimen>
     <dimen name="clock_simple_am_pm_indicator">20dp</dimen>
-    <dimen name="clock_simple_date">30dp</dimen>
+    <dimen name="clock_simple_date">20dp</dimen>
+
+    <!-- Notification Cells -->
+    <!-- Material -->
+    <dimen name="notification_cell_material_padding">8dp</dimen>
+    <dimen name="notification_cell_material_margin_start_end">8dp</dimen>
+    <dimen name="notification_cell_material_margin_bottom">4dp</dimen>
+    <dimen name="notification_cell_material_height">56dp</dimen>
+    <dimen name="notification_cell_material_icon_size">48dp</dimen>
+    <dimen name="notification_cell_material_title_text_size">16dp</dimen>
+    <dimen name="notification_cell_material_main_text_text_size">13dp</dimen>
 
 </resources>

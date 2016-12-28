@@ -4,18 +4,25 @@ import android.Manifest;
 import android.animation.Animator;
 import android.app.Activity;
 import android.app.KeyguardManager;
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.WallpaperManager;
 import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.hardware.fingerprint.FingerprintManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.CancellationSignal;
+import android.os.IBinder;
 import android.provider.Settings;
+import android.service.notification.StatusBarNotification;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.os.Bundle;
@@ -33,6 +40,9 @@ import net.nrask.voidlockscreen.backgrounds.SensorBackground;
 import net.nrask.voidlockscreen.clocks.LockscreenClock;
 import net.nrask.voidlockscreen.clocks.SimpleClock;
 import net.nrask.voidlockscreen.helpers.UtilHelper;
+import net.nrask.voidlockscreen.notifications.LockscreenNotificationsView;
+import net.nrask.voidlockscreen.notifications.MaterialDesignNotifications;
+import net.nrask.voidlockscreen.services.NotificationReaderService;
 import net.nrask.voidlockscreen.unlockers.AcDisplayLockscreen;
 import net.nrask.voidlockscreen.unlockers.LockscreenUnlocker;
 import net.nrask.voidlockscreen.services.StartLockscreenService;
@@ -46,6 +56,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	public RelativeLayout wrapperView;
 
 	private LockscreenUnlocker unlocker;
+	private LockscreenNotificationsView notificationsView;
 	private LockscreenBackground background;
 	private CancellationSignal cancellationSignal = new CancellationSignal();
 
@@ -87,6 +98,12 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 		background.activityPaused();
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		notificationsView.activityDestroyed();
+	}
+
 	private void showLockScreen() {
 		if (!SRJService.isServiceRunning(StartLockscreenService.class, getBaseContext())) {
 			startService(new Intent(getBaseContext(), StartLockscreenService.class));
@@ -109,15 +126,18 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 		getWindow().setAttributes(localLayoutParams);
 		getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
-		wrapperView = new InterceptingRelativeLayout(getBaseContext());
+		wrapperView = new RelativeLayout(getBaseContext());
 		wrapperView.setOnTouchListener(this);
 		View.inflate(this, R.layout.lock_screen, wrapperView);
 
 		windowManager = ((WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE));
 		windowManager.addView(wrapperView, localLayoutParams);
 
+
+		// Add the components that make ud the lockscreen
 		background = new SensorBackground(this, wrapperView);
 		LockscreenClock clock = new SimpleClock(wrapperView, this);
+		notificationsView = new MaterialDesignNotifications(wrapperView, this);
 		unlocker = new AcDisplayLockscreen(wrapperView, this);
 	}
 

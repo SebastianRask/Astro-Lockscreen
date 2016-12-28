@@ -6,19 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import net.nrask.voidlockscreen.helpers.SRJHelper;
-
 /**
  * Created by Sebastian Rask Jepsen (SRJ@Idealdev.dk) on 23/12/16.
  */
 
 public abstract class MotionListener {
 	protected RelativeLayout lockscreenContainer;
-	protected Activity context;
+	protected Activity activity;
 
 	public MotionListener(RelativeLayout lockscreenContainer, Activity activity) {
 		this.lockscreenContainer = lockscreenContainer;
-		this.context = activity;
+		this.activity = activity;
 	}
 
 	public abstract void onUserTouchDown(MotionEvent motionEvent);
