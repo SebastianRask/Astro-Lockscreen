@@ -59,6 +59,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	private LockscreenNotificationsView notificationsView;
 	private LockscreenBackground background;
 	private CancellationSignal cancellationSignal = new CancellationSignal();
+	private ServiceConnection connection;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +88,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	@Override
 	protected void onResume() {
 		super.onResume();
+		Log.d(getClass().getSimpleName(), "Activity resumed");
 		listenForFingerPrintAuth();
 		background.activityResumed();
 	}
@@ -102,11 +104,34 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	protected void onDestroy() {
 		super.onDestroy();
 		notificationsView.activityDestroyed();
+		if (connection != null) {
+			unbindService(connection);
+		}
 	}
 
 	private void showLockScreen() {
 		if (!SRJService.isServiceRunning(StartLockscreenService.class, getBaseContext())) {
 			startService(new Intent(getBaseContext(), StartLockscreenService.class));
+		}
+
+		if (!SRJService.isServiceRunning(NotificationReaderService.class, getBaseContext())) {
+			Intent notificationServiceIntent = new Intent(getBaseContext(), NotificationReaderService.class);
+			startService(notificationServiceIntent);
+			bindService(
+					notificationServiceIntent,
+					connection = new ServiceConnection() {
+						@Override
+						public void onServiceConnected(ComponentName name, IBinder service) {
+							Log.d("NOTIF", "NLS Started");
+							NotificationReaderService.ServiceBinder binder = (NotificationReaderService.ServiceBinder)service;
+						}
+
+						@Override
+						public void onServiceDisconnected(ComponentName name) {
+							Log.d("NOTIF", "NLS Stopped");
+						}},
+					Context.BIND_AUTO_CREATE
+			);
 		}
 
 		WindowManager.LayoutParams localLayoutParams = new WindowManager.LayoutParams(
@@ -129,10 +154,8 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 		wrapperView = new RelativeLayout(getBaseContext());
 		wrapperView.setOnTouchListener(this);
 		View.inflate(this, R.layout.lock_screen, wrapperView);
-
 		windowManager = ((WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE));
 		windowManager.addView(wrapperView, localLayoutParams);
-
 
 		// Add the components that make ud the lockscreen
 		background = new SensorBackground(this, wrapperView);

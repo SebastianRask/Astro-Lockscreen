@@ -80,7 +80,7 @@
                 android:includeFontPadding="false"
                 android:maxLines="1"
                 android:ellipsize="marquee"
-                android:textColor="@color/black_text"
+                android:textColor="@color/black_text_secondary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 

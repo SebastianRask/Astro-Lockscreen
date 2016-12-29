@@ -37,6 +37,7 @@ public abstract class LockscreenNotificationsView extends MotionListener {
 		intentFilter.addAction(ACTION_ERROR_RETRIEVING_NOTIFICATIONS);
 		activity.registerReceiver(mNotificationsListener, intentFilter);
 
+		Log.d(getClass().getSimpleName(), "Broadcasting retrieve notifications");
 		Intent retrieveNotifications = new Intent(ACTION_RETRIEVE_NOTIFICATIONS);
 		activity.sendBroadcast(retrieveNotifications);
 	}

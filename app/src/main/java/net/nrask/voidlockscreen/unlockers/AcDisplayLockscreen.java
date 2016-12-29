@@ -49,6 +49,10 @@ public class AcDisplayLockscreen extends LockscreenUnlocker {
 
 		View.inflate(context, R.layout.unlocker_ac_display, lockscreenContainer);
 		imgLock = lockscreenContainer.findViewById(R.id.img_unlock_lock);
+		imgLock.setScrollX(0);
+		imgLock.setScrollY(0);
+		imgLock.setAlpha(0f);
+
 		unlockView = lockscreenContainer.findViewById(R.id.circle_unlock_container);
 		unlockView.setScaleX(0f);
 		unlockView.setScaleY(0f);
@@ -93,9 +97,16 @@ public class AcDisplayLockscreen extends LockscreenUnlocker {
 
 		Interpolator customInterpolator = PathInterpolatorCompat.create(0.080f, 1.80f, 0.590f, 1.70f);
 		scale = customInterpolator.getInterpolation(scale);
-
 		scaleAnimator = unlockView.animate().scaleX(scale).scaleY(scale).setDuration(0);
 		scaleAnimator.start();
+
+		float imgLockScale = scale/2;
+		if (imgLockScale > 0.35f) {
+			imgLockScale = 0.35f;
+		}
+
+		imgLock.animate().alpha(scale).scaleX(imgLockScale).scaleY(imgLockScale).setDuration(0).start();
+
 	}
 
 	@Override
@@ -103,6 +114,7 @@ public class AcDisplayLockscreen extends LockscreenUnlocker {
 		if (scaleAnimator != null) {
 			scaleAnimator.scaleY(0f).scaleX(0f).setDuration(450).setInterpolator(new AccelerateInterpolator()).start();
 		}
+		imgLock.animate().scaleY(0f).scaleX(0f).setDuration(350).setInterpolator(new AccelerateInterpolator()).start();
 		dimView.animate().alpha(0f).setDuration(450).setInterpolator(new DecelerateInterpolator()).start();
 	}
 

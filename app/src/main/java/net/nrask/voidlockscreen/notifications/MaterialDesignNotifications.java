@@ -18,6 +18,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,8 @@ import java.util.Locale;
  */
 
 public class MaterialDesignNotifications extends LockscreenNotificationsView {
-
+	private boolean isExpanded = false;
+	private final int MAX_NOTIFICATIONS_UNEXPANDED = 3;
 
 	public MaterialDesignNotifications(RelativeLayout lockscreenContainer, final Activity activity) {
 		super(lockscreenContainer, activity);
@@ -59,7 +61,6 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 			public void onBindViewHolder(MaterialNotificationViewHolder holder, int position) {
 				StatusBarNotification statusBarNotification = mNotifications.get(position);
 
-				long when = statusBarNotification.getNotification().when;
 
 				Bundle extras = statusBarNotification.getNotification().extras;
 				CharSequence notificationTitle = extras.getCharSequence(Notification.EXTRA_TITLE);
@@ -72,17 +73,20 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 				CharSequence notificationSubText = extras.getCharSequence(Notification.EXTRA_SUB_TEXT); //Sub text might be the email address and should always be placed at the bottom
 				CharSequence notificationSummary = extras.getCharSequence(Notification.EXTRA_SUMMARY_TEXT);
 
-				Bitmap notificationLargeIcon = ((Bitmap) extras.getParcelable(Notification.EXTRA_LARGE_ICON));
+				Bitmap notificationLargeIcon = extras.getParcelable(Notification.EXTRA_LARGE_ICON);
 				int notificationSmallIconRes = extras.getInt(Notification.EXTRA_SMALL_ICON);
+
+				//Log.d("Material", notificationTitle + " " + statusBarNotification.getGroupKey() + " " + statusBarNotification.getKey());
 
 
 				Calendar calendar = Calendar.getInstance();
-				calendar.setTimeInMillis(when);
+				calendar.setTimeInMillis(statusBarNotification.getNotification().when);
 
 
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 					holder.mNotificationSmallIcon.setColorFilter(statusBarNotification.getNotification().color);
 				}
+				holder.mNotificationSmallIcon.setVisibility(notificationLargeIcon == null ? View.VISIBLE : View.INVISIBLE);
 
 				holder.mNotificationWhenText.setText(
 						mClock.is24HourModeEnabled()
@@ -115,19 +119,17 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 
 			@Override
 			public int getItemCount() {
-				return mNotifications == null ? 0 : mNotifications.size();
-			}
-		});
-		mNotificationsRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-			@Override
-			public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-				super.getItemOffsets(outRect, view, parent, state);
-				if (parent.getChildLayoutPosition(view)== 0) {
-					outRect.top = (int) (SRJHelper.getScreenHeight(activity)/2.7);
+				if (mNotifications == null) {
+					return 0;
+				} else if (isExpanded || mNotifications.size() <= MAX_NOTIFICATIONS_UNEXPANDED) {
+					return mNotifications.size();
+				} else {
+					return MAX_NOTIFICATIONS_UNEXPANDED + 1;
 				}
 			}
 		});
 
+		mNotificationsRecyclerView.setTranslationY((int) (SRJHelper.getScreenHeight(activity)/2.7));
 	}
 
 	private class MaterialNotificationViewHolder extends ViewHolder {
