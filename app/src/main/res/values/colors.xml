@@ -285,6 +285,8 @@
     <color name="black_text_secondary">#8a000000</color>
     <color name="black_text">#de000000</color>
     <color name="black_transparent">#00000000</color>
+    <color name="black_half_transparent">#99000000</color>
+
 
     <color name="white">#ffffff</color>
     <color name="white_dividers">#1fffffff</color>

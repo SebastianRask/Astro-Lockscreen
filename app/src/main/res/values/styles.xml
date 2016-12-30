@@ -17,4 +17,21 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <style name="ClockTextStyle">
+        <item name="android:shadowColor">@color/black_half_transparent</item>
+        <item name="android:shadowDx">4</item>
+        <item name="android:shadowDy">4</item>
+        <item name="android:shadowRadius">5</item>
+
+
+        <item name="android:textColor">@color/white_text</item>
+        <item name="android:fontFamily">@string/font_roboto_light</item>
+        <item name="android:includeFontPadding">false</item>
+
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+
+
+    </style>
+
 </resources>

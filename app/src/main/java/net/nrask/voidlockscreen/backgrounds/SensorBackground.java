@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.WallpaperManager;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -17,18 +16,17 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-
-import com.google.android.apps.muzei.api.MuzeiContract;
 
 import net.nrask.voidlockscreen.R;
 import net.nrask.voidlockscreen.helpers.SRJHelper;
 import net.nrask.voidlockscreen.tasks.FetchMuzeiWallpaper;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import jp.wasabeef.blurry.Blurry;
 
 import static android.content.Context.SENSOR_SERVICE;
 
@@ -46,9 +44,10 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 	private View backgroundImageContainer;
 	private ImageView backgroundImage;
 	private HorizontalScrollView scrollView;
+	private ViewGroup mBlurView;
 
 
-	public SensorBackground(Activity activity, RelativeLayout lockscreenContainer) {
+	public SensorBackground(final Activity activity, RelativeLayout lockscreenContainer) {
 		super(activity, lockscreenContainer);
 		this.lockscreenContainer = lockscreenContainer;
 
@@ -57,14 +56,18 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 		View.inflate(activity, R.layout.background_sensor_parallax, lockscreenContainer);
 		backgroundImage = (ImageView) lockscreenContainer.findViewById(R.id.background_image);
 		scrollView = (HorizontalScrollView) lockscreenContainer.findViewById(R.id.scrollView);
+		mBlurView = (ViewGroup) lockscreenContainer.findViewById(R.id.blur_view);
 
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inPreferredConfig = Bitmap.Config.RGB_565;
-		Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.phonewallpaper4, options);
+//		BitmapFactory.Options options = new BitmapFactory.Options();
+//		options.inPreferredConfig = Bitmap.Config.RGB_565;
+//		Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.phonewallpaper4, options);
 		//backgroundImage.setImageBitmap(bitmap);
 
 		setMuzeiAsBackground(activity);
-		//setSystemAsBackground(activity);
+//		setSystemAsBackground(activity);
+
+
+
 	}
 
 	@Override
@@ -80,6 +83,7 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 	}
 
 	private void enableParallaxIfPossible(Context context, final int imageWidth) {
+		Log.d(getClass().getSimpleName(), "Image width " + imageWidth);
 		//If the width of the image is less than the width of the screen, then parallax is not possible. So remove the image from the scrollview and add it to the container instead.
 		if (imageWidth < SRJHelper.getScreenWidth(context)) {
 			scrollView.removeView(backgroundImage);
@@ -98,27 +102,45 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 		}
 	}
 
-	private void setSystemAsBackground(Context context) {
+	private void setSystemAsBackground(final Context context) {
 		WallpaperManager wallpaperManager = WallpaperManager.getInstance(context);
 		final Drawable wallpaperDrawable = wallpaperManager.getDrawable();
 
-		BitmapDrawable wallpaperBitmap = (BitmapDrawable) wallpaperDrawable;
-		int width = wallpaperBitmap.getBitmap().getWidth();
-
-		backgroundImage.setImageDrawable(wallpaperBitmap);
-
-		enableParallaxIfPossible(context, width);
+		final BitmapDrawable wallpaperBitmap = (BitmapDrawable) wallpaperDrawable;
+		setBackgroundImage(context, wallpaperBitmap.getBitmap());
 	}
 
 	private void setMuzeiAsBackground(final Activity context) {
+		boolean imageSet = false;
+		Bitmap oldBitmap = null;
+		try {
+			oldBitmap = SRJHelper.getImageFromStorage(context.getString(R.string.muzei_wallpaper_storage_key), context);
+
+			if (oldBitmap != null) {
+				setBackgroundImage(context, oldBitmap);
+				imageSet = true;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		final boolean finalImageSet = imageSet;
+		final Bitmap finalOldBitmap = oldBitmap;
 		new FetchMuzeiWallpaper(
 				new FetchMuzeiWallpaper.FetchMuzeiWallpaperCallback() {
 					@Override
-					public void wallpaperFetched(@Nullable Bitmap bitmap) {
-						if (bitmap != null) {
-							backgroundImage.setImageBitmap(bitmap);
-							enableParallaxIfPossible(context, bitmap.getWidth());
-						} else {
+					public void wallpaperFetched(@Nullable final Bitmap bitmap) {
+						if (bitmap != null && (!finalImageSet || !bitmap.sameAs(finalOldBitmap))) {
+							setBackgroundImage(context, bitmap);
+
+							new Thread(new Runnable() {
+								@Override
+								public void run() {
+									SRJHelper.saveImageToStorage(bitmap, context.getString(R.string.muzei_wallpaper_storage_key), context);
+								}
+							}).start();
+
+						} else if (bitmap == null) {
 							setSystemAsBackground(context);
 						}
 					}
@@ -127,11 +149,25 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 		).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 	}
 
+	private void setBackgroundImage(Context context, Bitmap image) {
+		Blurry.with(context)
+				.radius(15)
+				.from(image)
+				.into(backgroundImage);
+		enableParallaxIfPossible(context, image.getWidth());
+	}
+
 	@Override
 	public void onSensorChanged(SensorEvent event) {
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
 			float xDiff = event.values[0];
+			float minXDiff = 1;
+
+			if (Math.abs(xDiff) < minXDiff) {
+				xDiff = xDiff < 0 ? -minXDiff : minXDiff;
+			}
+
 			x -= xDiff;
 
 			int newX = (int) (x * parallaxFactor);

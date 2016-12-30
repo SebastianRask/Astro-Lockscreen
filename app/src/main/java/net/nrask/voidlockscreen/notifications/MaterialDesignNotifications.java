@@ -106,7 +106,7 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 					if(bmp == null && icon != null) {
 						bmp = ((BitmapDrawable) icon).getBitmap();
 
-						int paddingPx = SRJHelper.dpToPixels(activity, 8);
+						int paddingPx = SRJHelper.dpToPixels(activity, 10);
 						holder.mNotificationIcon.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
 					}
 

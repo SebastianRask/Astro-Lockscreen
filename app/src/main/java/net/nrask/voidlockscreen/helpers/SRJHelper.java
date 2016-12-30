@@ -389,7 +389,7 @@ public class SRJHelper {
 		try {
 			// Create an ByteArrayOutputStream and feed a compressed bitmap image in it
 			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-			image.compress(Bitmap.CompressFormat.PNG, 100, byteStream); // PNG as only format with transparency
+			image.compress(Bitmap.CompressFormat.PNG, 95, byteStream); // PNG as only format with transparency
 
 			// Create a FileOutputStream with out key and set the mode to private to ensure
 			// Only this app and read the file. Write out ByteArrayOutput to the file and close it

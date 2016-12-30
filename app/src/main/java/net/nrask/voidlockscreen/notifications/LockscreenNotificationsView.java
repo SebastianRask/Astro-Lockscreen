@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Notification.PRIORITY_DEFAULT;
+import static android.app.Notification.PRIORITY_LOW;
 import static net.nrask.voidlockscreen.services.NotificationReaderService.*;
 
 /**
@@ -67,7 +68,7 @@ public abstract class LockscreenNotificationsView extends MotionListener {
 			if (intent.getAction().equals(ACTION_NOTIFICATIONS_RETRIEVED)) {
 				List<StatusBarNotification> notifications = new ArrayList<>();
 				for (StatusBarNotification sbn : NotificationReaderService.mCurrentNotifications) {
-					if (sbn.getNotification().priority >= PRIORITY_DEFAULT) {
+					if (sbn.getNotification().priority >= PRIORITY_LOW) {
 						notifications.add(sbn);
 					}
 				}

@@ -23,5 +23,6 @@
     <string name="day_friday">friday</string>
     <string name="day_saturday">saturday</string>
     <string name="day_sunday">sunday</string>
+    <string name="muzei_wallpaper_storage_key">muzeiwallpaper</string>
 
 </resources>
