@@ -50,6 +50,7 @@ import net.nrask.voidlockscreen.SRJService;
 import net.nrask.voidlockscreen.views.InterceptingRelativeLayout;
 
 public class LockscreenActivity extends Activity implements View.OnTouchListener {
+	public static boolean running = false;
 	private boolean checkingDrawPermission = false;
 
 	public WindowManager windowManager;
@@ -103,6 +104,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		running = false;
 		notificationsView.activityDestroyed();
 		if (connection != null) {
 			unbindService(connection);

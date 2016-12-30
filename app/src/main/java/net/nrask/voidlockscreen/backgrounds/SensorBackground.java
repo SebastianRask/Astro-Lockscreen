@@ -44,8 +44,6 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 	private View backgroundImageContainer;
 	private ImageView backgroundImage;
 	private HorizontalScrollView scrollView;
-	private ViewGroup mBlurView;
-
 
 	public SensorBackground(final Activity activity, RelativeLayout lockscreenContainer) {
 		super(activity, lockscreenContainer);
@@ -56,7 +54,6 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 		View.inflate(activity, R.layout.background_sensor_parallax, lockscreenContainer);
 		backgroundImage = (ImageView) lockscreenContainer.findViewById(R.id.background_image);
 		scrollView = (HorizontalScrollView) lockscreenContainer.findViewById(R.id.scrollView);
-		mBlurView = (ViewGroup) lockscreenContainer.findViewById(R.id.blur_view);
 
 //		BitmapFactory.Options options = new BitmapFactory.Options();
 //		options.inPreferredConfig = Bitmap.Config.RGB_565;
@@ -65,8 +62,6 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 
 		setMuzeiAsBackground(activity);
 //		setSystemAsBackground(activity);
-
-
 
 	}
 
