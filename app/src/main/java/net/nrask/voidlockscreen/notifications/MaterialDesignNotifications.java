@@ -19,7 +19,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextClock;
@@ -32,8 +31,6 @@ import net.nrask.voidlockscreen.helpers.SRJHelper;
 
 import java.util.Calendar;
 import java.util.Locale;
-
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 /**
  * Created by Sebastian Rask Jepsen (SRJ@Idealdev.dk) on 27/12/16.
@@ -67,8 +64,9 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 			viewHolder.itemView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 				@Override
 				public void onGlobalLayout() {
-					viewHolder.originalHeight = viewHolder.itemView.getHeight();
-					viewHolder.itemView.getLayoutParams().height = (int) activity.getResources().getDimension(R.dimen.notification_cell_material_height);
+					viewHolder.collapsedHeight = (int) activity.getResources().getDimension(R.dimen.notification_cell_material_height);
+					viewHolder.expandedHeight = viewHolder.itemView.getHeight();
+					viewHolder.itemView.getLayoutParams().height = viewHolder.collapsedHeight;
 					viewHolder.itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 				}
 			});
@@ -106,7 +104,11 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 				@Override
 				public boolean onLongClick(View view) {
 					Log.d("Adapter", "Item long clicked");
-					holder.expand();
+					if (holder.isExpanded) {
+						holder.collapse();
+					} else {
+						holder.expand();
+					}
 					return true;
 				}
 			});
@@ -184,7 +186,7 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 
 	private class MaterialNotificationViewHolder extends ViewHolder {
 		protected boolean isExpanded = false;
-		protected int originalHeight = 0;
+		protected int expandedHeight = 0, collapsedHeight = 0;
 		protected CardView mCardView;
 		protected ImageView mNotificationIcon, mNotificationSmallIcon;
 		protected TextView mNotificationTitle, mNotificationText, mNotificationWhenText, mNotificationSubText;
@@ -244,15 +246,25 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 		}
 
 		public void expand() {
-			int duration = 340;
 			isExpanded = true;
+			stateChange(expandedHeight, 0f, 1f);
+		}
 
-			mNotificationTextContainer.animate().alpha(0f).setDuration(duration).start();
-			mNotificationExpandedTextContainer.animate().alpha(1f).setDuration(duration).start();
+		public void collapse() {
+			isExpanded = false;
+			stateChange(collapsedHeight, 1f, 0f);
+		}
 
-			ResizeHeightAnimation heightAnimation = new ResizeHeightAnimation(itemView, originalHeight);
+		private void stateChange(int height, float collapsedTextAlpha, float expandedTextAlpha) {
+			int duration = 340;
+
+			mNotificationTextContainer.animate().alpha(collapsedTextAlpha).setDuration(duration).start();
+			mNotificationExpandedTextContainer.animate().alpha(expandedTextAlpha).setDuration(duration).start();
+
+			ResizeHeightAnimation heightAnimation = new ResizeHeightAnimation(itemView, height);
 			heightAnimation.setDuration(duration);
 			itemView.startAnimation(heightAnimation);
 		}
+
 	}
 }

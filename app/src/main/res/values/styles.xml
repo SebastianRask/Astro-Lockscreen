@@ -46,7 +46,7 @@
         <item name="android:layout_alignParentStart">true</item>
         <item name="android:layout_marginEnd">@dimen/notification_cell_material_title_margin_end</item>
     </style>
-    
+
     <style name="NotificationMaterialMainText" parent="NotificationMaterialText">
         <item name="android:textSize">@dimen/notification_cell_material_main_text_text_size</item>
         <item name="android:textColor">@color/black_text_secondary</item>
