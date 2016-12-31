@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
+import net.nrask.voidlockscreen.activities.LockscreenActivity;
 import net.nrask.voidlockscreen.services.NotificationReaderService;
 import net.nrask.voidlockscreen.unlockers.MotionListener;
 
@@ -30,7 +31,7 @@ public abstract class LockscreenNotificationsView extends MotionListener {
 	protected ArrayList<StatusBarNotification> mNotifications;
 	protected RecyclerView.Adapter mAdapter;
 
-	public LockscreenNotificationsView(RelativeLayout lockscreenContainer, Activity activity) {
+	public LockscreenNotificationsView(RelativeLayout lockscreenContainer, LockscreenActivity activity) {
 		super(lockscreenContainer, activity);
 
 		mNotificationsListener = new NotificationListener();

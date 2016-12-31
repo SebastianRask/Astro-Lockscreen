@@ -30,8 +30,32 @@
 
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-
-
     </style>
+
+    <style name="NotificationMaterialText">
+        <item name="android:textColor">@color/black_text</item>
+        <item name="android:fontFamily">@string/font_roboto_regular</item>
+        <item name="android:ellipsize">marquee</item>
+
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="NotificationMaterialTitle" parent="NotificationMaterialText">
+        <item name="android:textSize">@dimen/notification_cell_material_title_text_size</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_marginEnd">@dimen/notification_cell_material_title_margin_end</item>
+    </style>
+    
+    <style name="NotificationMaterialMainText" parent="NotificationMaterialText">
+        <item name="android:textSize">@dimen/notification_cell_material_main_text_text_size</item>
+        <item name="android:textColor">@color/black_text_secondary</item>
+    </style>
+
+    <style name="NotificationMaterialWhenText" parent="NotificationMaterialMainText">
+        <item name="android:layout_alignParentEnd">true</item>
+    </style>
+
+
 
 </resources>

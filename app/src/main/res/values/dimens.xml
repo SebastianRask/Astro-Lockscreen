@@ -16,9 +16,11 @@
     <dimen name="notification_cell_material_padding">8dp</dimen>
     <dimen name="notification_cell_material_margin_start_end">8dp</dimen>
     <dimen name="notification_cell_material_margin_bottom">4dp</dimen>
-    <dimen name="notification_cell_material_height">56dp</dimen>
+    <dimen name="notification_cell_material_height">64dp</dimen>
     <dimen name="notification_cell_material_icon_size">48dp</dimen>
     <dimen name="notification_cell_material_title_text_size">16dp</dimen>
     <dimen name="notification_cell_material_main_text_text_size">13dp</dimen>
+    <dimen name="notification_cell_material_text_container_margin_end">8dp</dimen>
+    <dimen name="notification_cell_material_title_margin_end">8dp</dimen>
 
 </resources>

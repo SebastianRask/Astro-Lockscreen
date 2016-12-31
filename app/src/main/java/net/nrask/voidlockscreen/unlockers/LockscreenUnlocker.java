@@ -11,7 +11,7 @@ import net.nrask.voidlockscreen.activities.LockscreenActivity;
 
 public abstract class LockscreenUnlocker extends MotionListener {
 
-	public LockscreenUnlocker(RelativeLayout lockscreenContainer, Activity context) {
+	public LockscreenUnlocker(RelativeLayout lockscreenContainer, LockscreenActivity context) {
 		super(lockscreenContainer, context);
 	}
 

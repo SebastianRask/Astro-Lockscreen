@@ -6,15 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
+import net.nrask.voidlockscreen.activities.LockscreenActivity;
+
 /**
  * Created by Sebastian Rask Jepsen (SRJ@Idealdev.dk) on 23/12/16.
  */
 
 public abstract class MotionListener {
 	protected RelativeLayout lockscreenContainer;
-	protected Activity activity;
+	protected LockscreenActivity activity;
 
-	public MotionListener(RelativeLayout lockscreenContainer, Activity activity) {
+	public MotionListener(RelativeLayout lockscreenContainer, LockscreenActivity activity) {
 		this.lockscreenContainer = lockscreenContainer;
 		this.activity = activity;
 	}

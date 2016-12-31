@@ -8,6 +8,7 @@ import android.widget.TextClock;
 import android.widget.TextView;
 
 import net.nrask.voidlockscreen.R;
+import net.nrask.voidlockscreen.activities.LockscreenActivity;
 import net.nrask.voidlockscreen.unlockers.MotionListener;
 
 import java.util.Calendar;
@@ -19,7 +20,7 @@ import java.util.Locale;
 
 public abstract class LockscreenClock extends MotionListener {
 
-	public LockscreenClock(RelativeLayout lockscreenContainer, Activity activity) {
+	public LockscreenClock(RelativeLayout lockscreenContainer, LockscreenActivity activity) {
 		super(lockscreenContainer, activity);
 	}
 

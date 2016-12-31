@@ -11,15 +11,17 @@
     <RelativeLayout
         android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/notification_cell_material_height">
+        android:layout_height="match_parent">
 
         <FrameLayout
             android:id="@+id/notification_icon_container"
             android:layout_margin="@dimen/notification_cell_material_padding"
+            android:padding="4dp"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
             android:layout_width="@dimen/notification_cell_material_icon_size"
             android:layout_height="@dimen/notification_cell_material_icon_size">
+
             <ImageView
                 android:id="@+id/notification_small_icon"
                 android:src="@drawable/ic_grey_circle"
@@ -32,11 +34,12 @@
                 android:layout_height="match_parent"/>
         </FrameLayout>
 
-
         <LinearLayout
-            android:id="@+id/notification_text_container"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:id="@+id/notification_text_expanded_container"
             android:orientation="vertical"
-            android:layout_marginEnd="4dp"
+            android:layout_marginEnd="@dimen/notification_cell_material_text_container_margin_end"
             android:layout_toEndOf="@+id/notification_icon_container"
             android:layout_centerVertical="true"
             android:layout_width="match_parent"
@@ -47,53 +50,60 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/notification_title"
-                    android:fontFamily="@string/font_roboto_regular"
-                    android:textSize="@dimen/notification_cell_material_title_text_size"
-                    android:includeFontPadding="false"
-                    android:maxLines="1"
-                    android:ellipsize="marquee"
-                    android:textColor="@color/black_text"
-                    android:layout_toStartOf="@+id/notification_when_text"
-                    android:layout_alignParentStart="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    style="@style/NotificationMaterialTitle"
+                    android:id="@+id/notification_title_expanded"
+                    android:layout_toStartOf="@+id/notification_when_text_expanded"  />
 
                 <TextView
-                    android:id="@+id/notification_when_text"
-                    android:fontFamily="@string/font_roboto_regular"
-                    android:textSize="@dimen/notification_cell_material_main_text_text_size"
-                    android:textColor="@color/black_text_secondary"
-                    android:includeFontPadding="false"
+                    style="@style/NotificationMaterialWhenText"
+                    android:id="@+id/notification_when_text_expanded"
+                    android:layout_alignBaseline="@+id/notification_title_expanded"/>
+            </RelativeLayout>
+
+            <TextView
+                style="@style/NotificationMaterialMainText"
+                android:id="@+id/notification_text_expanded" />
+
+            <TextView
+                style="@style/NotificationMaterialMainText"
+                android:id="@+id/notification_sub_text_expanded" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/notification_text_container"
+            android:orientation="vertical"
+            android:layout_marginEnd="@dimen/notification_cell_material_text_container_margin_end"
+            android:layout_toEndOf="@+id/notification_icon_container"
+            android:layout_centerVertical="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    style="@style/NotificationMaterialTitle"
+                    android:id="@+id/notification_title"
                     android:maxLines="1"
-                    android:layout_alignBaseline="@+id/notification_title"
-                    android:layout_alignParentEnd="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_toStartOf="@+id/notification_when_text" />
+
+                <TextView
+                    style="@style/NotificationMaterialWhenText"
+                    android:id="@+id/notification_when_text"
+                    android:layout_alignBaseline="@+id/notification_title" />
             </RelativeLayout>
 
 
             <TextView
+                style="@style/NotificationMaterialMainText"
                 android:id="@+id/notification_text"
-                android:fontFamily="@string/font_roboto_regular"
-                android:textSize="@dimen/notification_cell_material_main_text_text_size"
-                android:includeFontPadding="false"
-                android:maxLines="1"
-                android:ellipsize="marquee"
-                android:textColor="@color/black_text_secondary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:maxLines="1" />
 
             <TextView
+                style="@style/NotificationMaterialMainText"
                 android:id="@+id/notification_sub_text"
-                android:fontFamily="@string/font_roboto_regular"
-                android:textSize="@dimen/notification_cell_material_main_text_text_size"
-                android:textColor="@color/black_text_secondary"
-                android:includeFontPadding="false"
-                android:maxLines="1"
-                android:ellipsize="marquee"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:maxLines="1" />
         </LinearLayout>
 
     </RelativeLayout>

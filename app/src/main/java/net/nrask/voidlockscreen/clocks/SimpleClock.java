@@ -9,6 +9,7 @@ import android.widget.TextClock;
 import android.widget.TextView;
 
 import net.nrask.voidlockscreen.R;
+import net.nrask.voidlockscreen.activities.LockscreenActivity;
 import net.nrask.voidlockscreen.helpers.SRJHelper;
 
 import java.util.Calendar;
@@ -19,7 +20,7 @@ import java.util.Calendar;
 
 public class SimpleClock extends LockscreenClock {
 
-	public SimpleClock(RelativeLayout lockscreenContainer, final Activity activity) {
+	public SimpleClock(RelativeLayout lockscreenContainer, final LockscreenActivity activity) {
 		super(lockscreenContainer, activity);
 
 		View.inflate(activity, R.layout.clock_simple, lockscreenContainer);

@@ -175,6 +175,10 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 		}
 	}
 
+	public void unlockNoTouch() {
+		unlocker.unlockNoTouch();
+	}
+
 	public void unlock() {
 		// Simple unlock by finishing activity and removing views
 		wrapperView.animate().alpha(0f).setDuration(340).setListener(new Animator.AnimatorListener() {

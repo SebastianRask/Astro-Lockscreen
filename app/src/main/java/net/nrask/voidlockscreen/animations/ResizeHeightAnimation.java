@@ -23,6 +23,10 @@ public class ResizeHeightAnimation extends Animation {
 		this(view, targetHeight, view.getHeight());
 	}
 
+	public ResizeHeightAnimation(View view) {
+		this(view, view.getMeasuredHeight());
+	}
+
 	@Override
 	protected void applyTransformation(float interpolatedTime, Transformation t) {
 		view.getLayoutParams().height = (int) (startHeight + (targetHeight - startHeight) * interpolatedTime);

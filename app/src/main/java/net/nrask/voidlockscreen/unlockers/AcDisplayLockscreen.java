@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import net.nrask.voidlockscreen.R;
+import net.nrask.voidlockscreen.activities.LockscreenActivity;
 import net.nrask.voidlockscreen.helpers.SRJHelper;
 
 /**
@@ -34,7 +35,7 @@ public class AcDisplayLockscreen extends LockscreenUnlocker {
 	private boolean hasVibrated = false;
 	private boolean unlockOnUp = false;
 
-	public AcDisplayLockscreen(RelativeLayout lockscreenContainer, Activity context) {
+	public AcDisplayLockscreen(RelativeLayout lockscreenContainer, LockscreenActivity context) {
 		super(lockscreenContainer, context);
 		this.lockscreenContainer = lockscreenContainer;
 		unlockDistance = context.getResources().getDimensionPixelSize(R.dimen.lockscreen_ac_display_unlock_distance);
