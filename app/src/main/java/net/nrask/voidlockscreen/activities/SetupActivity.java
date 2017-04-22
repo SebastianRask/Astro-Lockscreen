@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
+import io.fabric.sdk.android.Fabric;
 import net.nrask.voidlockscreen.R;
 import net.nrask.voidlockscreen.SRJService;
 import net.nrask.voidlockscreen.services.StartLockscreenService;
@@ -27,6 +29,7 @@ public class SetupActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Fabric.with(this, new Crashlytics());
 		setContentView(R.layout.activity_setup);
 
 		if (!SRJService.isServiceRunning(StartLockscreenService.class, getBaseContext())) {

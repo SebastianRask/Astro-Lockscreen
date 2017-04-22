@@ -5,13 +5,15 @@
     android:layout_marginStart="@dimen/notification_cell_material_margin_start_end"
     android:layout_marginEnd="@dimen/notification_cell_material_margin_start_end"
     android:layout_marginBottom="@dimen/notification_cell_material_margin_bottom"
+    android:minHeight="@dimen/notification_cell_material_height"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <RelativeLayout
+        android:id="@+id/notification_container"
         android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <FrameLayout
             android:id="@+id/notification_icon_container"

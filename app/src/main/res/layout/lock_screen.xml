@@ -5,5 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <net.nrask.voidlockscreen.views.InterceptingRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <HorizontalScrollView
+            android:id="@+id/scrollView"
+            android:scrollbars="none"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <ImageView
+                android:background="@color/black"
+                android:id="@+id/background_image"
+                android:scaleType="centerCrop"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                xmlns:android="http://schemas.android.com/apk/res/android" />
+
+        </HorizontalScrollView>
+
+    </net.nrask.voidlockscreen.views.InterceptingRelativeLayout>
+
 
 </RelativeLayout>

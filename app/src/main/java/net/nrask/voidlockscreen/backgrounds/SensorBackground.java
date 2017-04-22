@@ -41,7 +41,6 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 	private float x = 0;
 
 	private RelativeLayout lockscreenContainer;
-	private View backgroundImageContainer;
 	private ImageView backgroundImage;
 	private HorizontalScrollView scrollView;
 
@@ -50,8 +49,6 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 		this.lockscreenContainer = lockscreenContainer;
 
 		sensorManager = (SensorManager) activity.getSystemService(SENSOR_SERVICE);
-
-		View.inflate(activity, R.layout.background_sensor_parallax, lockscreenContainer);
 		backgroundImage = (ImageView) lockscreenContainer.findViewById(R.id.background_image);
 		scrollView = (HorizontalScrollView) lockscreenContainer.findViewById(R.id.scrollView);
 

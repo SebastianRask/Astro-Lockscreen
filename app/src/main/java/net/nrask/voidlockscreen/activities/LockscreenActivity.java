@@ -21,6 +21,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.CancellationSignal;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import android.support.annotation.Nullable;
@@ -30,6 +31,7 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -62,6 +64,8 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	private CancellationSignal cancellationSignal = new CancellationSignal();
 	private ServiceConnection connection;
 
+	final long startTime = System.currentTimeMillis();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -85,33 +89,46 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 			//Todo: Permission was denied. Show user that permission is absolutely needed.
 		}
 	}
+	boolean isRunning;
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		Log.d(getClass().getSimpleName(), "Activity resumed");
+		isRunning = true;
+
 		listenForFingerPrintAuth();
-		background.activityResumed();
+		if (background != null) {
+			background.activityResumed();
+
+		}
+		Log.d("LockscreenActivity", "LOCKSCREEN RESUMED " + (System.currentTimeMillis() - startTime)/1000.0);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		isRunning = false;
 		cancellationSignal.cancel();
-		background.activityPaused();
+		if (background != null) {
+			background.activityPaused();
+		}
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
 		running = false;
-		notificationsView.activityDestroyed();
+		if (notificationsView != null) {
+			notificationsView.activityDestroyed();
+		}
+
 		if (connection != null) {
 			unbindService(connection);
 		}
 	}
 
 	private void showLockScreen() {
+
 		if (!SRJService.isServiceRunning(StartLockscreenService.class, getBaseContext())) {
 			startService(new Intent(getBaseContext(), StartLockscreenService.class));
 		}
@@ -159,11 +176,10 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 		windowManager = ((WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE));
 		windowManager.addView(wrapperView, localLayoutParams);
 
-		// Add the components that make ud the lockscreen
-		background = new SensorBackground(this, wrapperView);
-		LockscreenClock clock = new SimpleClock(wrapperView, this);
-		notificationsView = new MaterialDesignNotifications(wrapperView, this);
-		unlocker = new AcDisplayLockscreen(wrapperView, this);
+		background = new SensorBackground(LockscreenActivity.this, wrapperView);
+		LockscreenClock clock = new SimpleClock(wrapperView, LockscreenActivity.this);
+		notificationsView = new MaterialDesignNotifications(wrapperView, LockscreenActivity.this);
+		unlocker = new AcDisplayLockscreen(wrapperView, LockscreenActivity.this);
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.M)

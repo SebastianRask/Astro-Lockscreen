@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextClock;
@@ -51,6 +52,54 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 		mNotificationsRecyclerView.setAdapter(mAdapter = new MaterialNotificationAdapter());
 		mNotificationsRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mAdapter);
 		mNotificationsRecyclerView.setTranslationY((int) (SRJHelper.getScreenHeight(activity)/2.7));
+
+		mNotificationsRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+			private int mCurrentDragDistance;
+			private float mStartX, mStartY;
+
+			@Override
+			public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+				return true;
+			}
+
+			@Override
+			public void onTouchEvent(RecyclerView rv, MotionEvent motionEvent) {
+				View viewToExpand = rv.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
+				switch (motionEvent.getAction()) {
+					case MotionEvent.ACTION_DOWN:
+						mStartX = motionEvent.getX();
+						mStartY = motionEvent.getY();
+						break;
+
+					case MotionEvent.ACTION_UP:
+						mCurrentDragDistance = 0;
+						break;
+
+					case MotionEvent.ACTION_MOVE:
+						final float x = motionEvent.getX();
+						final float y = motionEvent.getY();
+
+						// Calculate the distance moved
+						final float dx = x - mStartX;
+						final float dy = y - mStartY;
+
+						mCurrentDragDistance += dy;
+						Log.d(getClass().getSimpleName(), "new distance moved: " + dy);
+
+						viewToExpand.setLayoutParams(new FrameLayout.LayoutParams(
+								viewToExpand.getLayoutParams().width,
+								(int) (viewToExpand.getLayoutParams().height + dy)
+						));
+						break;
+				}
+			}
+
+			@Override
+			public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+			}
+		});
+
 	}
 
 	private class MaterialNotificationAdapter extends RecyclerView.Adapter<MaterialNotificationViewHolder> implements RecyclerView.OnItemTouchListener {
@@ -61,15 +110,22 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 					.from(parent.getContext())
 					.inflate(R.layout.notification_cell_material, parent, false);
 			final MaterialNotificationViewHolder viewHolder = new MaterialNotificationViewHolder(itemView);
+
 			viewHolder.itemView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 				@Override
 				public void onGlobalLayout() {
+					viewHolder.itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 					viewHolder.collapsedHeight = (int) activity.getResources().getDimension(R.dimen.notification_cell_material_height);
 					viewHolder.expandedHeight = viewHolder.itemView.getHeight();
-					viewHolder.itemView.getLayoutParams().height = viewHolder.collapsedHeight;
-					viewHolder.itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+					viewHolder.mContainer.setLayoutParams(
+							new FrameLayout.LayoutParams(viewHolder.mContainer.getLayoutParams().width, viewHolder.collapsedHeight)
+					);
+
 				}
 			});
+
+			//viewHolder.itemView.setOnTouchListener(new DragToExpandListener(viewHolder));
 			return viewHolder;
 		}
 
@@ -100,6 +156,7 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 				}
 			});
 
+			/*
 			holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
 				@Override
 				public boolean onLongClick(View view) {
@@ -112,6 +169,7 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 					return true;
 				}
 			});
+			*/
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 				holder.mNotificationSmallIcon.setColorFilter(statusBarNotification.getNotification().color);
@@ -184,7 +242,7 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 		}
 	}
 
-	private class MaterialNotificationViewHolder extends ViewHolder {
+	private class MaterialNotificationViewHolder extends ViewHolder implements ExpandableCell {
 		protected boolean isExpanded = false;
 		protected int expandedHeight = 0, collapsedHeight = 0;
 		protected CardView mCardView;
@@ -192,10 +250,12 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 		protected TextView mNotificationTitle, mNotificationText, mNotificationWhenText, mNotificationSubText;
 		protected TextView mNotificationTitleExpanded, mNotificationTextExpanded, mNotificationWhenTextExpanded, mNotificationSubTextExpanded;
 		protected View mNotificationTextContainer, mNotificationExpandedTextContainer;
+		protected RelativeLayout mContainer;
 
 		public MaterialNotificationViewHolder(View itemView) {
 			super(itemView);
 			mCardView = (CardView) itemView.findViewById(R.id.card_view);
+			mContainer = (RelativeLayout) itemView.findViewById(R.id.notification_container);
 			mNotificationIcon = (ImageView) itemView.findViewById(R.id.notification_icon);
 			mNotificationSmallIcon = (ImageView) itemView.findViewById(R.id.notification_small_icon);
 
@@ -261,10 +321,25 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 			mNotificationTextContainer.animate().alpha(collapsedTextAlpha).setDuration(duration).start();
 			mNotificationExpandedTextContainer.animate().alpha(expandedTextAlpha).setDuration(duration).start();
 
-			ResizeHeightAnimation heightAnimation = new ResizeHeightAnimation(itemView, height);
+			View viewToAnimated = mContainer;
+			ResizeHeightAnimation heightAnimation = new ResizeHeightAnimation(viewToAnimated, height);
 			heightAnimation.setDuration(duration);
-			itemView.startAnimation(heightAnimation);
+			viewToAnimated.startAnimation(heightAnimation);
 		}
 
+		@Override
+		public int getCollapsedHeight() {
+			return collapsedHeight;
+		}
+
+		@Override
+		public int getExpandedHeight() {
+			return expandedHeight;
+		}
+
+		@Override
+		public View getExpandableView() {
+			return mContainer;
+		}
 	}
 }
