@@ -1,6 +1,5 @@
 package net.nrask.voidlockscreen.clocks;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -25,10 +24,10 @@ public class SimpleClock extends LockscreenClock {
 
 		View.inflate(activity, R.layout.clock_simple, lockscreenContainer);
 
-		final RelativeLayout mClockContainer = (RelativeLayout) lockscreenContainer.findViewById(R.id.clock_container);
-		TextClock mTextClock = (TextClock) lockscreenContainer.findViewById(R.id.text_clock);
-		TextView mAmPmIndicator = (TextView) lockscreenContainer.findViewById(R.id.text_am_pm_indicator);
-		TextView mTextDate = (TextView) lockscreenContainer.findViewById(R.id.text_date);
+		final RelativeLayout mClockContainer = lockscreenContainer.findViewById(R.id.clock_container);
+		TextClock mTextClock = lockscreenContainer.findViewById(R.id.text_clock);
+		TextView mAmPmIndicator = lockscreenContainer.findViewById(R.id.text_am_pm_indicator);
+		TextView mTextDate = lockscreenContainer.findViewById(R.id.text_date);
 
 		setupClockViews(mTextClock, mAmPmIndicator, mClockContainer, activity);
 		setupTextDate(mTextDate, activity);

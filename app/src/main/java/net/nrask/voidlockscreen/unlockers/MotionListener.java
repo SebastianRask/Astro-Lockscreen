@@ -1,6 +1,5 @@
 package net.nrask.voidlockscreen.unlockers;
 
-import android.app.Activity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +12,7 @@ import net.nrask.voidlockscreen.activities.LockscreenActivity;
  */
 
 public abstract class MotionListener {
-	protected RelativeLayout lockscreenContainer;
+	private RelativeLayout lockscreenContainer;
 	protected LockscreenActivity activity;
 
 	public MotionListener(RelativeLayout lockscreenContainer, LockscreenActivity activity) {

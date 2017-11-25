@@ -16,10 +16,8 @@ public abstract class LockscreenUnlocker extends MotionListener {
 	}
 
 	protected void unlock() {
-		if (activity instanceof LockscreenActivity) {
-			((LockscreenActivity) activity).unlock();
-		} else {
-			activity.finish();
+		if (activity != null) {
+			activity.unlock();
 		}
 	}
 

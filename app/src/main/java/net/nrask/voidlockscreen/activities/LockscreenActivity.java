@@ -4,52 +4,40 @@ import android.Manifest;
 import android.animation.Animator;
 import android.app.Activity;
 import android.app.KeyguardManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.WallpaperManager;
-import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
 import android.hardware.fingerprint.FingerprintManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.CancellationSignal;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.provider.Settings;
-import android.service.notification.StatusBarNotification;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
-import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import net.nrask.voidlockscreen.R;
+import net.nrask.voidlockscreen.SRJService;
 import net.nrask.voidlockscreen.backgrounds.LockscreenBackground;
 import net.nrask.voidlockscreen.backgrounds.SensorBackground;
-import net.nrask.voidlockscreen.clocks.LockscreenClock;
 import net.nrask.voidlockscreen.clocks.SimpleClock;
 import net.nrask.voidlockscreen.helpers.UtilHelper;
 import net.nrask.voidlockscreen.notifications.LockscreenNotificationsView;
 import net.nrask.voidlockscreen.notifications.MaterialDesignNotifications;
 import net.nrask.voidlockscreen.services.NotificationReaderService;
+import net.nrask.voidlockscreen.services.StartLockscreenService;
 import net.nrask.voidlockscreen.unlockers.AcDisplayLockscreen;
 import net.nrask.voidlockscreen.unlockers.LockscreenUnlocker;
-import net.nrask.voidlockscreen.services.StartLockscreenService;
-import net.nrask.voidlockscreen.SRJService;
-import net.nrask.voidlockscreen.views.InterceptingRelativeLayout;
 
 public class LockscreenActivity extends Activity implements View.OnTouchListener {
 	public static boolean running = false;
@@ -65,6 +53,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	private ServiceConnection connection;
 
 	final long startTime = System.currentTimeMillis();
+	boolean isRunning;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -83,13 +72,13 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	protected void onStart() {
 		super.onStart();
 
+		// Check if user is back from accepting drawing permission
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkingDrawPermission && Settings.canDrawOverlays(this)) {
 			recreate();
 		} else {
 			//Todo: Permission was denied. Show user that permission is absolutely needed.
 		}
 	}
-	boolean isRunning;
 
 	@Override
 	protected void onResume() {
@@ -109,6 +98,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 		super.onPause();
 		isRunning = false;
 		cancellationSignal.cancel();
+
 		if (background != null) {
 			background.activityPaused();
 		}
@@ -128,7 +118,6 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	}
 
 	private void showLockScreen() {
-
 		if (!SRJService.isServiceRunning(StartLockscreenService.class, getBaseContext())) {
 			startService(new Intent(getBaseContext(), StartLockscreenService.class));
 		}
@@ -172,12 +161,13 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 
 		wrapperView = new RelativeLayout(getBaseContext());
 		wrapperView.setOnTouchListener(this);
+
 		View.inflate(this, R.layout.lock_screen, wrapperView);
 		windowManager = ((WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE));
 		windowManager.addView(wrapperView, localLayoutParams);
 
 		background = new SensorBackground(LockscreenActivity.this, wrapperView);
-		LockscreenClock clock = new SimpleClock(wrapperView, LockscreenActivity.this);
+		new SimpleClock(wrapperView, LockscreenActivity.this);
 		notificationsView = new MaterialDesignNotifications(wrapperView, LockscreenActivity.this);
 		unlocker = new AcDisplayLockscreen(wrapperView, LockscreenActivity.this);
 	}
@@ -186,6 +176,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	public void checkDrawOverlayPermission() {
 		if (!Settings.canDrawOverlays(this)) {
 			checkingDrawPermission = true;
+
 			Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
 			startActivity(intent);
 		}
@@ -199,11 +190,6 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 		// Simple unlock by finishing activity and removing views
 		wrapperView.animate().alpha(0f).setDuration(340).setListener(new Animator.AnimatorListener() {
 			@Override
-			public void onAnimationStart(Animator animator) {
-
-			}
-
-			@Override
 			public void onAnimationEnd(Animator animator) {
 				removeAndFinish();
 			}
@@ -214,9 +200,10 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 			}
 
 			@Override
-			public void onAnimationRepeat(Animator animator) {
+			public void onAnimationStart(Animator animator) {}
 
-			}
+			@Override
+			public void onAnimationRepeat(Animator animator) {}
 		}).start();
 
 	}
@@ -242,9 +229,12 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 		}
 		FingerprintManager fingerprintManager = (FingerprintManager) getSystemService(Context.FINGERPRINT_SERVICE);
 
+		if (fingerprintManager == null) {
+			return;
+		}
+
 		//ToDo: Don't do this here. Move to settings activity
 		if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
-			Log.d(getClass().getSimpleName(), "Checking permission");
 			ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.USE_FINGERPRINT}, 200);
 
 			return;
@@ -273,7 +263,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 			public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult result) {
 				super.onAuthenticationSucceeded(result);
 				Log.d(getClass().getSimpleName(), "Finger Auth success");
-				UtilHelper.vibrateSucces(getBaseContext());
+				UtilHelper.vibrateSuccess(getBaseContext());
 				unlocker.unlockNoTouch();
 			}
 
@@ -295,8 +285,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 			return false;
 		}
 
-		//Log.d(getClass().getSimpleName(), "TOUCH");
-
+		// Send motion event to unlocker
 		switch (motionEvent.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 				unlocker.onUserTouchDown(motionEvent);

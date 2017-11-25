@@ -49,17 +49,11 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 		this.lockscreenContainer = lockscreenContainer;
 
 		sensorManager = (SensorManager) activity.getSystemService(SENSOR_SERVICE);
-		backgroundImage = (ImageView) lockscreenContainer.findViewById(R.id.background_image);
-		scrollView = (HorizontalScrollView) lockscreenContainer.findViewById(R.id.scrollView);
-
-//		BitmapFactory.Options options = new BitmapFactory.Options();
-//		options.inPreferredConfig = Bitmap.Config.RGB_565;
-//		Bitmap bitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.phonewallpaper4, options);
-		//backgroundImage.setImageBitmap(bitmap);
+		backgroundImage = lockscreenContainer.findViewById(R.id.background_image);
+		scrollView = lockscreenContainer.findViewById(R.id.scrollView);
 
 		setMuzeiAsBackground(activity);
 //		setSystemAsBackground(activity);
-
 	}
 
 	@Override
@@ -154,7 +148,7 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
 			float xDiff = event.values[0];
-			float minXDiff = 1;
+			float minXDiff = 0.5f;
 
 			if (Math.abs(xDiff) < minXDiff) {
 				xDiff = xDiff < 0 ? -minXDiff : minXDiff;

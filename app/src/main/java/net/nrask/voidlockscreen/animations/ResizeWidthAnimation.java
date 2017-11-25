@@ -9,9 +9,9 @@ import android.view.animation.Transformation;
  */
 
 public class ResizeWidthAnimation extends Animation {
-	final int startWidth;
-	final int targetWidth;
-	View view;
+	private final int startWidth;
+	private final int targetWidth;
+	private View view;
 
 	public ResizeWidthAnimation(View view, int targetWidth, int startWidth) {
 		this.view = view;

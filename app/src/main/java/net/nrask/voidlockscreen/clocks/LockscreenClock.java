@@ -36,12 +36,12 @@ public abstract class LockscreenClock extends MotionListener {
 	@Override
 	public void onDismissViews() {}
 
-	protected int getDayOfMonth() {
+	int getDayOfMonth() {
 		Calendar mCalendar = Calendar.getInstance();
 		return mCalendar.get(Calendar.DAY_OF_MONTH);
 	}
 
-	protected String getCalendarFieldName(int field, boolean shorten, boolean capitalize) {
+	String getCalendarFieldName(int field, boolean shorten, boolean capitalize) {
 		Calendar mCalendar = Calendar.getInstance();
 		String result = mCalendar.getDisplayName(field, shorten ? Calendar.SHORT : Calendar.LONG, Locale.getDefault());
 		return capitalize ? result.toUpperCase() : result;

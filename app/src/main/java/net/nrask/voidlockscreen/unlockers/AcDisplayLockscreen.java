@@ -25,7 +25,6 @@ import net.nrask.voidlockscreen.helpers.SRJHelper;
  */
 
 public class AcDisplayLockscreen extends LockscreenUnlocker {
-	private RelativeLayout lockscreenContainer;
 	private View unlockView, imgLock;
 	private ViewPropertyAnimator scaleAnimator;
 	private FrameLayout dimView;
@@ -38,7 +37,6 @@ public class AcDisplayLockscreen extends LockscreenUnlocker {
 
 	public AcDisplayLockscreen(RelativeLayout lockscreenContainer, LockscreenActivity context) {
 		super(lockscreenContainer, context);
-		this.lockscreenContainer = lockscreenContainer;
 		unlockDistance = context.getResources().getDimensionPixelSize(R.dimen.lockscreen_ac_display_unlock_distance);
 
 		dimView = new FrameLayout(context);

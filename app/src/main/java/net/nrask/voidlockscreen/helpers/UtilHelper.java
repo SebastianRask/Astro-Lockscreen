@@ -7,7 +7,7 @@ import android.content.Context;
  */
 
 public class UtilHelper {
-	public static void vibrateSucces(Context context) {
+	public static void vibrateSuccess(Context context) {
 		SRJHelper.vibrate(50, context);
 	}
 
