@@ -45,61 +45,14 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 	public MaterialDesignNotifications(RelativeLayout lockscreenContainer, final LockscreenActivity activity) {
 		super(lockscreenContainer, activity);
 		View.inflate(activity, R.layout.notification_material, lockscreenContainer);
-		RecyclerView mNotificationsRecyclerView = (RecyclerView) lockscreenContainer.findViewById(R.id.notifications_recyclerview);
-		mClock = (TextClock) lockscreenContainer.findViewById(R.id.text_clock);
+		RecyclerView mNotificationsRecyclerView = lockscreenContainer.findViewById(R.id.notifications_recyclerview);
+		mClock = lockscreenContainer.findViewById(R.id.text_clock);
 
 		mNotificationsRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
 		mNotificationsRecyclerView.setAdapter(mAdapter = new MaterialNotificationAdapter());
 		mNotificationsRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mAdapter);
 		mNotificationsRecyclerView.setTranslationY((int) (SRJHelper.getScreenHeight(activity)/2.7));
-
-		mNotificationsRecyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-			private int mCurrentDragDistance;
-			private float mStartX, mStartY;
-
-			@Override
-			public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-				return true;
-			}
-
-			@Override
-			public void onTouchEvent(RecyclerView rv, MotionEvent motionEvent) {
-				View viewToExpand = rv.findChildViewUnder(motionEvent.getX(), motionEvent.getY());
-				switch (motionEvent.getAction()) {
-					case MotionEvent.ACTION_DOWN:
-						mStartX = motionEvent.getX();
-						mStartY = motionEvent.getY();
-						break;
-
-					case MotionEvent.ACTION_UP:
-						mCurrentDragDistance = 0;
-						break;
-
-					case MotionEvent.ACTION_MOVE:
-						final float x = motionEvent.getX();
-						final float y = motionEvent.getY();
-
-						// Calculate the distance moved
-						final float dx = x - mStartX;
-						final float dy = y - mStartY;
-
-						mCurrentDragDistance += dy;
-						Log.d(getClass().getSimpleName(), "new distance moved: " + dy);
-
-						viewToExpand.setLayoutParams(new FrameLayout.LayoutParams(
-								viewToExpand.getLayoutParams().width,
-								(int) (viewToExpand.getLayoutParams().height + dy)
-						));
-						break;
-				}
-			}
-
-			@Override
-			public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-			}
-		});
-
+		mNotificationsRecyclerView.setItemAnimator(null);
 	}
 
 	private class MaterialNotificationAdapter extends RecyclerView.Adapter<MaterialNotificationViewHolder> implements RecyclerView.OnItemTouchListener {
@@ -125,7 +78,7 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 				}
 			});
 
-			//viewHolder.itemView.setOnTouchListener(new DragToExpandListener(viewHolder));
+			viewHolder.itemView.setOnTouchListener(new DragToExpandListener(viewHolder));
 			return viewHolder;
 		}
 
@@ -149,14 +102,14 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 				public void onClick(View view) {
 					try {
 						statusBarNotification.getNotification().contentIntent.send();
-						activity.unlockNoTouch(); //ToDo Dont directly unlock. Show security screen if possible
+						activity.unlockNoTouch(); //ToDo Dont directly unlock. Show security screen if needed
 					} catch (PendingIntent.CanceledException e) {
 						e.printStackTrace();
 					}
 				}
 			});
 
-			/*
+
 			holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
 				@Override
 				public boolean onLongClick(View view) {
@@ -169,7 +122,7 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 					return true;
 				}
 			});
-			*/
+
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 				holder.mNotificationSmallIcon.setColorFilter(statusBarNotification.getNotification().color);
@@ -254,22 +207,22 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 
 		public MaterialNotificationViewHolder(View itemView) {
 			super(itemView);
-			mCardView = (CardView) itemView.findViewById(R.id.card_view);
-			mContainer = (RelativeLayout) itemView.findViewById(R.id.notification_container);
-			mNotificationIcon = (ImageView) itemView.findViewById(R.id.notification_icon);
-			mNotificationSmallIcon = (ImageView) itemView.findViewById(R.id.notification_small_icon);
+			mCardView = itemView.findViewById(R.id.card_view);
+			mContainer = itemView.findViewById(R.id.notification_container);
+			mNotificationIcon = itemView.findViewById(R.id.notification_icon);
+			mNotificationSmallIcon = itemView.findViewById(R.id.notification_small_icon);
 
 			mNotificationTextContainer = itemView.findViewById(R.id.notification_text_container);
-			mNotificationTitle = (TextView) itemView.findViewById(R.id.notification_title);
-			mNotificationText = (TextView) itemView.findViewById(R.id.notification_text);
-			mNotificationSubText = (TextView) itemView.findViewById(R.id.notification_sub_text);
-			mNotificationWhenText = (TextView) itemView.findViewById(R.id.notification_when_text);
+			mNotificationTitle = itemView.findViewById(R.id.notification_title);
+			mNotificationText = itemView.findViewById(R.id.notification_text);
+			mNotificationSubText = itemView.findViewById(R.id.notification_sub_text);
+			mNotificationWhenText = itemView.findViewById(R.id.notification_when_text);
 
 			mNotificationExpandedTextContainer = itemView.findViewById(R.id.notification_text_expanded_container);
-			mNotificationTitleExpanded = (TextView) itemView.findViewById(R.id.notification_title_expanded);
-			mNotificationTextExpanded = (TextView) itemView.findViewById(R.id.notification_text_expanded);
-			mNotificationSubTextExpanded = (TextView) itemView.findViewById(R.id.notification_sub_text_expanded);
-			mNotificationWhenTextExpanded = (TextView) itemView.findViewById(R.id.notification_when_text_expanded);
+			mNotificationTitleExpanded = itemView.findViewById(R.id.notification_title_expanded);
+			mNotificationTextExpanded = itemView.findViewById(R.id.notification_text_expanded);
+			mNotificationSubTextExpanded = itemView.findViewById(R.id.notification_sub_text_expanded);
+			mNotificationWhenTextExpanded = itemView.findViewById(R.id.notification_when_text_expanded);
 
 			mNotificationTextContainer.setAlpha(isExpanded ? 0f : 1f);
 			mNotificationExpandedTextContainer.setAlpha(isExpanded ? 1f : 0f);
@@ -339,7 +292,7 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 
 		@Override
 		public View getExpandableView() {
-			return mContainer;
+			return this.itemView;
 		}
 	}
 }

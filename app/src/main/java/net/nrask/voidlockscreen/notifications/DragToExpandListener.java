@@ -1,6 +1,5 @@
 package net.nrask.voidlockscreen.notifications;
 
-import android.support.v4.view.MotionEventCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,6 +30,7 @@ public class DragToExpandListener implements View.OnTouchListener {
 
 			case MotionEvent.ACTION_UP:
 				mCurrentDragDistance = 0;
+				viewToExpand.performClick();
 				break;
 
 			case MotionEvent.ACTION_MOVE:
@@ -42,12 +42,10 @@ public class DragToExpandListener implements View.OnTouchListener {
 				final float dy = y - mStartY;
 
 				mCurrentDragDistance += dy;
-				Log.d(getClass().getSimpleName(), "new distance moved: " + dy);
 
-				viewToExpand.setLayoutParams(new FrameLayout.LayoutParams(
-						viewToExpand.getLayoutParams().width,
-						(int) (viewToExpand.getLayoutParams().height + dy)
-				));
+				Log.d(getClass().getSimpleName(), "Height Before: " + viewToExpand.getLayoutParams().height);
+				viewToExpand.getLayoutParams().height += dy;
+				Log.d(getClass().getSimpleName(), "Height After: " + viewToExpand.getLayoutParams().height);
 				break;
 		}
 		return false;

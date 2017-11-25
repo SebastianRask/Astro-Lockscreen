@@ -13,7 +13,6 @@ import android.hardware.SensorManager;
 import android.os.AsyncTask;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.HorizontalScrollView;
@@ -37,7 +36,7 @@ import static android.content.Context.SENSOR_SERVICE;
 public class SensorBackground extends LockscreenBackground implements SensorEventListener {
 	private SensorManager sensorManager;
 
-	private float parallaxFactor = 0.1f;
+	private final float PARALLAX_FACTOR = 0.03f;
 	private float x = 0;
 
 	private RelativeLayout lockscreenContainer;
@@ -81,8 +80,8 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 				public void onGlobalLayout() {
 					scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-					x = (backgroundImage.getWidth()/2 - scrollView.getWidth()/2)/parallaxFactor; // Center image
-					scrollView.setScrollX((int) (x * parallaxFactor));
+					x = (backgroundImage.getWidth()/2 - scrollView.getWidth()/2)/ PARALLAX_FACTOR; // Center image
+					scrollView.setScrollX((int) (x * PARALLAX_FACTOR));
 				}
 			});
 		}
@@ -148,7 +147,7 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 		if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
 
 			float xDiff = event.values[0];
-			float minXDiff = 0.5f;
+			float minXDiff = 0.1f;
 
 			if (Math.abs(xDiff) < minXDiff) {
 				xDiff = xDiff < 0 ? -minXDiff : minXDiff;
@@ -156,7 +155,7 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 
 			x -= xDiff;
 
-			int newX = (int) (x * parallaxFactor);
+			int newX = (int) (x * PARALLAX_FACTOR);
 
 			if (x < 0) {
 				x = 0;
