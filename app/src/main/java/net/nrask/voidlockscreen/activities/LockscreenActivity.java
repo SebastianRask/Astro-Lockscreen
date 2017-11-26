@@ -41,7 +41,6 @@ import net.nrask.voidlockscreen.unlockers.LockscreenUnlocker;
 
 public class LockscreenActivity extends Activity implements View.OnTouchListener {
 	public static boolean running = false;
-	private boolean checkingDrawPermission = false;
 
 	public WindowManager windowManager;
 	public RelativeLayout wrapperView;
@@ -52,8 +51,8 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	private CancellationSignal cancellationSignal = new CancellationSignal();
 	private ServiceConnection connection;
 
-	final long startTime = System.currentTimeMillis();
-	boolean isRunning;
+	private final long CREATION_TIMESTAMP = System.currentTimeMillis();
+	private final int OVERLAY_PERMISSION_REQUEST = 8776;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -69,34 +68,20 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	}
 
 	@Override
-	protected void onStart() {
-		super.onStart();
-
-		// Check if user is back from accepting drawing permission
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkingDrawPermission && Settings.canDrawOverlays(this)) {
-			recreate();
-		} else {
-			//Todo: Permission was denied. Show user that permission is absolutely needed.
-		}
-	}
-
-	@Override
 	protected void onResume() {
 		super.onResume();
-		isRunning = true;
 
 		listenForFingerPrintAuth();
 		if (background != null) {
 			background.activityResumed();
 
 		}
-		Log.d("LockscreenActivity", "LOCKSCREEN RESUMED " + (System.currentTimeMillis() - startTime)/1000.0);
+		Log.d("LockscreenActivity", "LOCKSCREEN RESUMED " + (System.currentTimeMillis() - CREATION_TIMESTAMP)/1000.0);
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
-		isRunning = false;
 		cancellationSignal.cancel();
 
 		if (background != null) {
@@ -114,6 +99,22 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 
 		if (connection != null) {
 			unbindService(connection);
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		switch (requestCode) {
+			case OVERLAY_PERMISSION_REQUEST:
+				// Check if user is back from accepting drawing permission
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Settings.canDrawOverlays(this)) {
+					recreate();
+				} else {
+					//Todo: Permission was denied. Show user that permission is absolutely needed.
+				}
+				break;
 		}
 	}
 
@@ -175,10 +176,8 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	@RequiresApi(api = Build.VERSION_CODES.M)
 	public void checkDrawOverlayPermission() {
 		if (!Settings.canDrawOverlays(this)) {
-			checkingDrawPermission = true;
-
 			Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
-			startActivity(intent);
+			startActivityForResult(intent, OVERLAY_PERMISSION_REQUEST);
 		}
 	}
 

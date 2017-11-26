@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -22,8 +23,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent">
         </activity>
+
         <activity android:name=".activities.StartUpActivity">
         </activity>
+
         <activity android:name=".activities.SetupActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -50,5 +53,4 @@
             android:name="io.fabric.ApiKey"
             android:value="3d7eff6d68afabdc3bdbae620d5d81c0a4be098c" />
     </application>
-    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>

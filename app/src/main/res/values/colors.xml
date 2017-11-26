@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">@color/blue_grey_900</color>
+    <color name="colorPrimaryDark">@color/blue_grey_950</color>
+    <color name="colorAccent">#F75959</color>
 
     <color name="red_50">#ffebee</color>
     <color name="red_100">#ffcdd2</color>
@@ -278,6 +278,7 @@
     <color name="blue_grey_700">#455a64</color>
     <color name="blue_grey_800">#37474f</color>
     <color name="blue_grey_900">#263238</color>
+    <color name="blue_grey_950">#192125</color>
 
     <color name="black">#000000</color>
     <color name="black_dividers">#1f000000</color>
