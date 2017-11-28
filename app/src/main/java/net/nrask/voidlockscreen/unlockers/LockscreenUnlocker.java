@@ -1,6 +1,5 @@
 package net.nrask.voidlockscreen.unlockers;
 
-import android.app.Activity;
 import android.widget.RelativeLayout;
 
 import net.nrask.voidlockscreen.activities.LockscreenActivity;

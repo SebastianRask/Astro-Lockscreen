@@ -7,13 +7,12 @@
     android:id="@+id/activity_setup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="32dp"
+    android:padding="@dimen/default_margin_large"
     android:background="?attr/colorPrimary"
-    android:orientation="vertical"
-    tools:context="net.nrask.voidlockscreen.activities.SetupActivity">
+    android:orientation="vertical">
 
     <FrameLayout
-        android:layout_weight="3"
+        android:layout_weight="2"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="0dp">
@@ -27,50 +26,26 @@
         android:focusable="true"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:layout_width="match_parent"
         android:layout_height="0dp">
         <TextView
-            android:text="Welcome!"
-            android:layout_marginTop="16dp"
+            android:text="Let\'s get you setup"
+            android:layout_marginTop="@dimen/default_margin"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textColor="@color/white_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:text="What should we call you?"
+            android:text="@string/welcome_hint_name"
             android:textAppearance="@style/TextAppearance.AppCompat.Headline"
             android:textColor="@color/white_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <android.support.design.widget.TextInputEditText
-            android:id="@+id/input_name"
-            android:inputType="textPersonName"
-            android:backgroundTint="@color/white"
-            android:layout_marginTop="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
-
-    <!--<Button-->
-    <!--android:text="Notification Access"-->
-    <!--android:onClick="onClickEnableNotifications"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"/>-->
-
-    <!--<Button-->
-    <!--android:text="Disable System Lockscreen"-->
-    <!--android:onClick="onClickDisableSystemLockScreen"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"/>-->
-
-    <!--<Button-->
-        <!--android:text="Enable Data Access"-->
-        <!--android:onClick="onClickEnableDataAccess"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"/>-->
 </LinearLayout>
+

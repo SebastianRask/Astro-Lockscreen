@@ -24,5 +24,9 @@
     <string name="day_saturday">saturday</string>
     <string name="day_sunday">sunday</string>
     <string name="muzei_wallpaper_storage_key">muzeiwallpaper</string>
+    <string name="action_done">Done</string>
+    <string name="welcome_hint_name">What should we call you?</string>
+    <string name="txt_welcome">Welcome</string>
+    <string name="action_lets_go">Let\'s go</string>
 
 </resources>

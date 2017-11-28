@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/lock_screen_container"
+    android:background="@color/amber_500"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -28,6 +29,5 @@
         </HorizontalScrollView>
 
     </net.nrask.voidlockscreen.views.InterceptingRelativeLayout>
-
 
 </RelativeLayout>

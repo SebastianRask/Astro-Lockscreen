@@ -3,6 +3,8 @@ package net.nrask.voidlockscreen.activities;
 import android.Manifest;
 import android.animation.Animator;
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.Application;
 import android.app.KeyguardManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -19,13 +21,17 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import net.nrask.voidlockscreen.HomeKeyLocker;
 import net.nrask.voidlockscreen.R;
 import net.nrask.voidlockscreen.SRJService;
 import net.nrask.voidlockscreen.backgrounds.LockscreenBackground;
@@ -39,17 +45,21 @@ import net.nrask.voidlockscreen.services.StartLockscreenService;
 import net.nrask.voidlockscreen.unlockers.AcDisplayLockscreen;
 import net.nrask.voidlockscreen.unlockers.LockscreenUnlocker;
 
+import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
+
 public class LockscreenActivity extends Activity implements View.OnTouchListener {
 	public static boolean running = false;
 
 	public WindowManager windowManager;
-	public RelativeLayout wrapperView;
+	public static RelativeLayout wrapperView;
 
 	private LockscreenUnlocker unlocker;
 	private LockscreenNotificationsView notificationsView;
 	private LockscreenBackground background;
 	private CancellationSignal cancellationSignal = new CancellationSignal();
 	private ServiceConnection connection;
+	private HomeKeyLocker homeKeyLocker = new HomeKeyLocker();
 
 	private final long CREATION_TIMESTAMP = System.currentTimeMillis();
 	private final int OVERLAY_PERMISSION_REQUEST = 8776;
@@ -57,6 +67,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//setContentView(R.layout.lock_screen);
 
 		try {
 			showLockScreen();
@@ -82,11 +93,15 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	@Override
 	protected void onPause() {
 		super.onPause();
+
 		cancellationSignal.cancel();
 
 		if (background != null) {
 			background.activityPaused();
 		}
+
+		ActivityManager am = (ActivityManager)getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+		am.moveTaskToFront(getTaskId(), 0);
 	}
 
 	@Override
@@ -100,6 +115,12 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 		if (connection != null) {
 			unbindService(connection);
 		}
+	}
+
+	@Override
+	public void onUserLeaveHint() {
+		super.onUserLeaveHint();
+		Log.d("LockScreen", "onUserLeaveHint");
 	}
 
 	@Override
@@ -119,6 +140,8 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 	}
 
 	private void showLockScreen() {
+		homeKeyLocker.lock(this);
+
 		if (!SRJService.isServiceRunning(StartLockscreenService.class, getBaseContext())) {
 			startService(new Intent(getBaseContext(), StartLockscreenService.class));
 		}
@@ -143,34 +166,44 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 			);
 		}
 
-		WindowManager.LayoutParams localLayoutParams = new WindowManager.LayoutParams(
-				WindowManager.LayoutParams.TYPE_SYSTEM_ERROR,
-				WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
-						WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
-						WindowManager.LayoutParams.FLAG_FULLSCREEN |
-						WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
-						WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD,
-				PixelFormat.TRANSLUCENT);
-
 		// Unfortunately the flags WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD are not working on some devices (Thanks Samsung!)
 		// So to be sure the keyguard is disabled, we disable the keyguard using this deprecated method
 		// Or you might want to specifically ask users to disable their system screen ic_lock_black to get the best experience
-		((KeyguardManager) getSystemService(KEYGUARD_SERVICE)).newKeyguardLock("IN").disableKeyguard();
+		KeyguardManager km = ((KeyguardManager) getSystemService(KEYGUARD_SERVICE));
+		KeyguardManager.KeyguardLock lock = km.newKeyguardLock(getPackageName());
+		lock.disableKeyguard();
 
-		getWindow().setAttributes(localLayoutParams);
+		WindowManager.LayoutParams localLayoutParams = new WindowManager.LayoutParams();
+		localLayoutParams.type = TYPE_SYSTEM_ALERT;
+		localLayoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE |
+				WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN |
+				WindowManager.LayoutParams.FLAG_FULLSCREEN |
+				WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED |
+				WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD;
+		localLayoutParams.format = PixelFormat.TRANSLUCENT;
+
+		getWindow().addFlags(localLayoutParams.flags);
+		getWindow().setType(TYPE_SYSTEM_OVERLAY);
 		getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
+//		if (wrapperView == null) {
+//
+//
+//
+//		} else {
+//			wrapperView.setAlpha(1f);
+//		}
 		wrapperView = new RelativeLayout(getBaseContext());
-		wrapperView.setOnTouchListener(this);
-
 		View.inflate(this, R.layout.lock_screen, wrapperView);
-		windowManager = ((WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE));
-		windowManager.addView(wrapperView, localLayoutParams);
-
+		wrapperView.setOnTouchListener(this);
 		background = new SensorBackground(LockscreenActivity.this, wrapperView);
 		new SimpleClock(wrapperView, LockscreenActivity.this);
 		notificationsView = new MaterialDesignNotifications(wrapperView, LockscreenActivity.this);
 		unlocker = new AcDisplayLockscreen(wrapperView, LockscreenActivity.this);
+
+		windowManager = ((WindowManager) getApplicationContext().getSystemService(WINDOW_SERVICE));
+		windowManager.addView(wrapperView, localLayoutParams);
+
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.M)
@@ -195,7 +228,7 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 
 			@Override
 			public void onAnimationCancel(Animator animator) {
-				removeAndFinish();
+				onAnimationEnd(animator);
 			}
 
 			@Override
@@ -209,9 +242,11 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 
 	private void removeAndFinish() {
 		try {
+			homeKeyLocker.unlock();
 			windowManager.removeView(wrapperView);
+			//wrapperView.setEnabled(false);
 			wrapperView.removeAllViews();
-			finish();
+			finishAffinity();
 		} catch (Exception e) {
 			e.printStackTrace();
 			finish();
@@ -263,7 +298,9 @@ public class LockscreenActivity extends Activity implements View.OnTouchListener
 				super.onAuthenticationSucceeded(result);
 				Log.d(getClass().getSimpleName(), "Finger Auth success");
 				UtilHelper.vibrateSuccess(getBaseContext());
-				unlocker.unlockNoTouch();
+				if (unlocker != null) {
+					unlocker.unlockNoTouch();
+				}
 			}
 
 			@Override

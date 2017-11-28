@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="net.nrask.voidlockscreen">
+    package="net.nrask.voidlockscreen">
 
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.USE_FINGERPRINT"/>
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
 
     <application
+        android:name=".VoidApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -19,28 +22,26 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.LockscreenActivity"
+            android:launchMode="singleTop"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.Transparent">
-        </activity>
-
-        <activity android:name=".activities.StartUpActivity">
-        </activity>
-
-        <activity android:name=".activities.SetupActivity">
+            android:theme="@style/Theme.Transparent"/>
+        <activity android:name=".activities.StartUpActivity"/>
+        <activity android:name=".activities.WelcomeActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <receiver android:name=".receivers.StartLockscreenReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".services.StartLockscreenService"/>
+        <service android:name=".services.StartLockscreenService" />
         <service
             android:name=".services.NotificationReaderService"
             android:label="@string/app_name"
@@ -49,8 +50,8 @@
                 <action android:name="android.service.notification.NotificationListenerService" />
             </intent-filter>
         </service>
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="3d7eff6d68afabdc3bdbae620d5d81c0a4be098c" />
+
+        <activity android:name=".activities.SetupActivity"></activity>
     </application>
+
 </manifest>
