@@ -106,7 +106,7 @@ public class SRJHelper {
 	/**
 	 * Converts Double to time. f.eks. 4.5 becomes "04"
 	 */
-	public static String numberToClockTime(double time) {
+	public static String numberToClockFormat(double time) {
 		int timeInt = ((int) Math.floor(time));
 
 		if (timeInt < 10) {
@@ -410,6 +410,8 @@ public class SRJHelper {
 	 * @throws IOException
 	 */
 	public static Bitmap getImageFromStorage(String key, Context context) throws IOException {
+		if (!doesStorageFileExist(key, context)) return null;
+
 		InputStream fileIn = context.openFileInput(key);
 		return BitmapFactory.decodeStream(fileIn);
 	}

@@ -1,13 +1,8 @@
 package net.nrask.voidlockscreen.clocks;
 
-import android.app.Activity;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.TextClock;
-import android.widget.TextView;
 
-import net.nrask.voidlockscreen.R;
 import net.nrask.voidlockscreen.activities.LockscreenActivity;
 import net.nrask.voidlockscreen.unlockers.MotionListener;
 
@@ -41,7 +36,7 @@ public abstract class LockscreenClock extends MotionListener {
 		return mCalendar.get(Calendar.DAY_OF_MONTH);
 	}
 
-	String getCalendarFieldName(int field, boolean shorten, boolean capitalize) {
+	String getCalendarFieldFormatted(int field, boolean shorten, boolean capitalize) {
 		Calendar mCalendar = Calendar.getInstance();
 		String result = mCalendar.getDisplayName(field, shorten ? Calendar.SHORT : Calendar.LONG, Locale.getDefault());
 		return capitalize ? result.toUpperCase() : result;

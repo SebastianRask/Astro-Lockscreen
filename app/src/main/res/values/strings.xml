@@ -28,5 +28,6 @@
     <string name="welcome_hint_name">What should we call you?</string>
     <string name="txt_welcome">Welcome</string>
     <string name="action_lets_go">Let\'s go</string>
+    <string name="setup_title">Let\'s get you setup</string>
 
 </resources>

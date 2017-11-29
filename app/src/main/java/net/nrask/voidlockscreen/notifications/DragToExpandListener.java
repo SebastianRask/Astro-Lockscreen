@@ -3,7 +3,8 @@ package net.nrask.voidlockscreen.notifications;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.FrameLayout;
+
+import net.nrask.voidlockscreen.notifications.viewholders.ExpandableCell;
 
 /**
  * Created by Sebastian Rask on 11-02-2017.

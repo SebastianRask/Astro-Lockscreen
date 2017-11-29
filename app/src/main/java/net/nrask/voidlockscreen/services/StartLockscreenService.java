@@ -25,8 +25,9 @@ public class StartLockscreenService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
-
-		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(Intent.ACTION_SCREEN_OFF);
+		filter.addAction(Intent.ACTION_USER_PRESENT);
 		registerReceiver(mReceiver, filter);
 
 		return START_STICKY;

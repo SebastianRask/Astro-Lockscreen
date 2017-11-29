@@ -1,6 +1,5 @@
 package net.nrask.voidlockscreen.notifications;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,9 +17,10 @@ import net.nrask.voidlockscreen.unlockers.MotionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.app.Notification.PRIORITY_DEFAULT;
 import static android.app.Notification.PRIORITY_LOW;
-import static net.nrask.voidlockscreen.services.NotificationReaderService.*;
+import static net.nrask.voidlockscreen.services.NotificationReaderService.ACTION_ERROR_RETRIEVING_NOTIFICATIONS;
+import static net.nrask.voidlockscreen.services.NotificationReaderService.ACTION_NOTIFICATIONS_RETRIEVED;
+import static net.nrask.voidlockscreen.services.NotificationReaderService.ACTION_RETRIEVE_NOTIFICATIONS;
 
 /**
  * Created by Sebastian Rask Jepsen (SRJ@Idealdev.dk) on 27/12/16.

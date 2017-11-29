@@ -23,11 +23,6 @@ public class FetchMuzeiWallpaper extends AsyncTask<Void, Void, Bitmap> {
 	}
 
 	@Override
-	protected void onPreExecute() {
-		super.onPreExecute();
-	}
-
-	@Override
 	protected Bitmap doInBackground(Void... voids) {
 		try {
 			return MuzeiContract.Artwork.getCurrentArtworkBitmap(context);

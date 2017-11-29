@@ -50,9 +50,9 @@ public class SimpleClock extends LockscreenClock {
 	private void setupTextDate(TextView dateText, Context context) {
 		dateText.setText(
 				context.getString(R.string.date_simple,
-						getCalendarFieldName(Calendar.DAY_OF_WEEK, true, false),
+						getCalendarFieldFormatted(Calendar.DAY_OF_WEEK, true, false),
 						getDayOfMonth(),
-						getCalendarFieldName(Calendar.MONTH, false, false)
+						getCalendarFieldFormatted(Calendar.MONTH, false, false)
 				)
 		);
 	}

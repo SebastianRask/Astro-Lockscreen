@@ -33,7 +33,7 @@ import static android.content.Context.SENSOR_SERVICE;
  * Created by Sebastian Rask Jepsen (SRJ@Idealdev.dk) on 23/12/16.
  */
 
-public class SensorBackground extends LockscreenBackground implements SensorEventListener {
+public class ParallaxBackground extends LockscreenBackground implements SensorEventListener {
 	private SensorManager sensorManager;
 
 	private final float PARALLAX_FACTOR = 0.03f;
@@ -43,7 +43,7 @@ public class SensorBackground extends LockscreenBackground implements SensorEven
 	private ImageView backgroundImage;
 	private HorizontalScrollView scrollView;
 
-	public SensorBackground(final Activity activity, RelativeLayout lockscreenContainer) {
+	public ParallaxBackground(final Activity activity, RelativeLayout lockscreenContainer) {
 		super(activity, lockscreenContainer);
 		this.lockscreenContainer = lockscreenContainer;
 

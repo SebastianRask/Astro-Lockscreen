@@ -8,11 +8,8 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.service.notification.StatusBarNotification;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,15 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextClock;
-import android.widget.TextView;
 
 import net.nrask.voidlockscreen.R;
 import net.nrask.voidlockscreen.activities.LockscreenActivity;
-import net.nrask.voidlockscreen.animations.ResizeHeightAnimation;
 import net.nrask.voidlockscreen.helpers.SRJHelper;
+import net.nrask.voidlockscreen.notifications.viewholders.MaterialNotificationViewHolder;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -39,7 +34,7 @@ import java.util.Locale;
 
 public class MaterialDesignNotifications extends LockscreenNotificationsView {
 	private boolean isExpanded = false;
-	private final int MAX_NOTIFICATIONS_UNEXPANDED = 3;
+	private final int MAX_NOTIFICATIONS_UNEXPANDED = 3; // TODO calculate how much space there are for notifications
 	private TextClock mClock;
 
 	public MaterialDesignNotifications(RelativeLayout lockscreenContainer, final LockscreenActivity activity) {
@@ -51,7 +46,7 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 		mNotificationsRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
 		mNotificationsRecyclerView.setAdapter(mAdapter = new MaterialNotificationAdapter());
 		mNotificationsRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mAdapter);
-		mNotificationsRecyclerView.setTranslationY((int) (SRJHelper.getScreenHeight(activity)/2.7));
+		mNotificationsRecyclerView.setTranslationY((int) (SRJHelper.getScreenHeight(activity)/2.7)); // TODO get position another way
 		mNotificationsRecyclerView.setItemAnimator(null);
 	}
 
@@ -68,11 +63,11 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 				@Override
 				public void onGlobalLayout() {
 					viewHolder.itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-					viewHolder.collapsedHeight = (int) activity.getResources().getDimension(R.dimen.notification_cell_material_height);
-					viewHolder.expandedHeight = viewHolder.itemView.getHeight();
+					viewHolder.setCollapsedHeight((int) activity.getResources().getDimension(R.dimen.notification_cell_material_height));
+					viewHolder.setExpandedHeight(viewHolder.itemView.getHeight());
 
-					viewHolder.mContainer.setLayoutParams(
-							new FrameLayout.LayoutParams(viewHolder.mContainer.getLayoutParams().width, viewHolder.collapsedHeight)
+					viewHolder.getContainer().setLayoutParams(
+							new FrameLayout.LayoutParams(viewHolder.getContainer().getLayoutParams().width, viewHolder.getCollapsedHeight())
 					);
 
 				}
@@ -113,8 +108,7 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 			holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
 				@Override
 				public boolean onLongClick(View view) {
-					Log.d("Adapter", "Item long clicked");
-					if (holder.isExpanded) {
+					if (holder.isExpanded()) {
 						holder.collapse();
 					} else {
 						holder.expand();
@@ -133,8 +127,8 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 			calendar.setTimeInMillis(statusBarNotification.getNotification().when);
 			holder.setWhenText(
 					mClock.is24HourModeEnabled()
-							? SRJHelper.numberToClockTime(calendar.get(Calendar.HOUR_OF_DAY)) + ":" + SRJHelper.numberToClockTime(calendar.get(Calendar.MINUTE))
-							: SRJHelper.numberToClockTime(calendar.get(Calendar.HOUR)) + ":" + SRJHelper.numberToClockTime(calendar.get(Calendar.MINUTE))  + " " + (calendar.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.getDefault()))
+							? SRJHelper.numberToClockFormat(calendar.get(Calendar.HOUR_OF_DAY)) + ":" + SRJHelper.numberToClockFormat(calendar.get(Calendar.MINUTE))
+							: SRJHelper.numberToClockFormat(calendar.get(Calendar.HOUR)) + ":" + SRJHelper.numberToClockFormat(calendar.get(Calendar.MINUTE))  + " " + (calendar.getDisplayName(Calendar.AM_PM, Calendar.LONG, Locale.getDefault()))
 
 			);
 			holder.setTitle(
@@ -195,104 +189,4 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 		}
 	}
 
-	private class MaterialNotificationViewHolder extends ViewHolder implements ExpandableCell {
-		protected boolean isExpanded = false;
-		protected int expandedHeight = 0, collapsedHeight = 0;
-		protected CardView mCardView;
-		protected ImageView mNotificationIcon, mNotificationSmallIcon;
-		protected TextView mNotificationTitle, mNotificationText, mNotificationWhenText, mNotificationSubText;
-		protected TextView mNotificationTitleExpanded, mNotificationTextExpanded, mNotificationWhenTextExpanded, mNotificationSubTextExpanded;
-		protected View mNotificationTextContainer, mNotificationExpandedTextContainer;
-		protected RelativeLayout mContainer;
-
-		public MaterialNotificationViewHolder(View itemView) {
-			super(itemView);
-			mCardView = itemView.findViewById(R.id.card_view);
-			mContainer = itemView.findViewById(R.id.notification_container);
-			mNotificationIcon = itemView.findViewById(R.id.notification_icon);
-			mNotificationSmallIcon = itemView.findViewById(R.id.notification_small_icon);
-
-			mNotificationTextContainer = itemView.findViewById(R.id.notification_text_container);
-			mNotificationTitle = itemView.findViewById(R.id.notification_title);
-			mNotificationText = itemView.findViewById(R.id.notification_text);
-			mNotificationSubText = itemView.findViewById(R.id.notification_sub_text);
-			mNotificationWhenText = itemView.findViewById(R.id.notification_when_text);
-
-			mNotificationExpandedTextContainer = itemView.findViewById(R.id.notification_text_expanded_container);
-			mNotificationTitleExpanded = itemView.findViewById(R.id.notification_title_expanded);
-			mNotificationTextExpanded = itemView.findViewById(R.id.notification_text_expanded);
-			mNotificationSubTextExpanded = itemView.findViewById(R.id.notification_sub_text_expanded);
-			mNotificationWhenTextExpanded = itemView.findViewById(R.id.notification_when_text_expanded);
-
-			mNotificationTextContainer.setAlpha(isExpanded ? 0f : 1f);
-			mNotificationExpandedTextContainer.setAlpha(isExpanded ? 1f : 0f);
-		}
-
-		public void setTitle(CharSequence title, @Nullable CharSequence titleExpanded) {
-			mNotificationTitle.setText(title);
-			mNotificationTitleExpanded.setText(titleExpanded == null ? title : titleExpanded);
-		}
-
-		public void setText(CharSequence text, @Nullable CharSequence textExpanded, @Nullable CharSequence[] lines) {
-			int visibility = (text == null || text.length() == 0) ? View.GONE : View.VISIBLE;
-
-			mNotificationText.setVisibility(visibility);
-			mNotificationTextExpanded.setVisibility(visibility);
-
-			mNotificationText.setText(text);
-			mNotificationTextExpanded.setText(textExpanded == null ? text : textExpanded);
-		}
-
-		public void setWhenText(CharSequence whenText) {
-			mNotificationWhenText.setText(whenText);
-			mNotificationWhenTextExpanded.setText(whenText);
-		}
-
-		public void setSubText(CharSequence subText) {
-			int visibility = (subText == null || subText.length() == 0) ? View.GONE : View.VISIBLE;
-
-			mNotificationSubText.setVisibility(visibility);
-			mNotificationSubTextExpanded.setVisibility(visibility);
-
-			mNotificationSubText.setText(subText);
-			mNotificationSubTextExpanded.setText(subText);
-		}
-
-		public void expand() {
-			isExpanded = true;
-			stateChange(expandedHeight, 0f, 1f);
-		}
-
-		public void collapse() {
-			isExpanded = false;
-			stateChange(collapsedHeight, 1f, 0f);
-		}
-
-		private void stateChange(int height, float collapsedTextAlpha, float expandedTextAlpha) {
-			int duration = 340;
-
-			mNotificationTextContainer.animate().alpha(collapsedTextAlpha).setDuration(duration).start();
-			mNotificationExpandedTextContainer.animate().alpha(expandedTextAlpha).setDuration(duration).start();
-
-			View viewToAnimated = mContainer;
-			ResizeHeightAnimation heightAnimation = new ResizeHeightAnimation(viewToAnimated, height);
-			heightAnimation.setDuration(duration);
-			viewToAnimated.startAnimation(heightAnimation);
-		}
-
-		@Override
-		public int getCollapsedHeight() {
-			return collapsedHeight;
-		}
-
-		@Override
-		public int getExpandedHeight() {
-			return expandedHeight;
-		}
-
-		@Override
-		public View getExpandableView() {
-			return this.itemView;
-		}
-	}
 }

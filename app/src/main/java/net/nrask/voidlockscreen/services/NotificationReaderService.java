@@ -1,9 +1,11 @@
 package net.nrask.voidlockscreen.services;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Binder;
 import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
@@ -30,9 +32,10 @@ public class NotificationReaderService extends NotificationListenerService {
 
 	@Override
 	public IBinder onBind(Intent intent) {
-		//isBound = true;
 		String action = intent.getAction();
 		Log.d("NOTIF", "onBind: " + action);
+
+		//return super.onBind(intent);
 
 		if (SERVICE_INTERFACE.equals(action)) {
 			Log.d("NOTIF", "Bound by system");
@@ -48,13 +51,10 @@ public class NotificationReaderService extends NotificationListenerService {
 		super.onCreate();
 		Log.d(getClass().getSimpleName(), "Creating Notification reader service");
 
-
 		mNLServiceReceiver = new NLServiceReceiver();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(ACTION_RETRIEVE_NOTIFICATIONS);
 		registerReceiver(mNLServiceReceiver, filter);
-
-		getActiveNotificationsAndBroadcast();
 	}
 
 	@Override
@@ -73,11 +73,17 @@ public class NotificationReaderService extends NotificationListenerService {
 		super.onNotificationRemoved(sbn);
 	}
 
+	@Override
+	public void onListenerConnected() {
+		super.onListenerConnected();
+		getActiveNotificationsAndBroadcast();
+	}
+
 	private void getActiveNotificationsAndBroadcast() {
 		try {
 			Log.d(getClass().getSimpleName(), "Broadcasting notifications");
 
-			StatusBarNotification notifications[] = getActiveNotifications();
+			StatusBarNotification[] notifications = getActiveNotifications();
 			mCurrentNotifications = new ArrayList<>(Arrays.asList(notifications));
 
 			Intent notificationsRetrieved = new  Intent(ACTION_NOTIFICATIONS_RETRIEVED);
@@ -97,7 +103,7 @@ public class NotificationReaderService extends NotificationListenerService {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.d(getClass().getSimpleName(), "RECEIVED " + intent.getAction());
-			if(intent.getAction().equals(ACTION_RETRIEVE_NOTIFICATIONS)){
+			if(intent.getAction() != null && intent.getAction().equals(ACTION_RETRIEVE_NOTIFICATIONS)){
 				getActiveNotificationsAndBroadcast();
 			}
 		}

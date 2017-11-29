@@ -16,8 +16,9 @@ import net.nrask.voidlockscreen.services.StartLockscreenService;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class WelcomeActivity extends AppCompatActivity implements TextWatcher, View.OnClickListener{
+public class WelcomeActivity extends AppCompatActivity implements TextWatcher {
 
 	@BindView(R.id.btn_done)
 	protected View mDoneButton;
@@ -37,7 +38,6 @@ public class WelcomeActivity extends AppCompatActivity implements TextWatcher, V
 		}
 
 		mNameInput.addTextChangedListener(this);
-		mDoneButton.setOnClickListener(this);
 	}
 
 	@Override
@@ -54,14 +54,8 @@ public class WelcomeActivity extends AppCompatActivity implements TextWatcher, V
 	public void afterTextChanged(Editable editable) {
 	}
 
-	@Override
-	public void onClick(View view) {
-		switch (view.getId()) {
-			case R.id.btn_done:
-
-				break;
-			default:
-				break;
-		}
+	@OnClick(R.id.btn_done)
+	public void onBtnDoneClicked() {
+		startActivity(new Intent(getBaseContext(), SetupActivity.class));
 	}
 }

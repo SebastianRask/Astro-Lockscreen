@@ -16,13 +16,14 @@ import net.nrask.voidlockscreen.helpers.SRJHelper;
 public class StartLockscreenReceiver extends BroadcastReceiver {
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		Log.d(getClass().getSimpleName(), "Lockscreen Intent received - " + intent.getAction());
+
 		if (LockscreenActivity.running) {
 			return;
 		}
 
-		Log.d(getClass().getSimpleName(), "Lockscreen Intent received - " + intent.getAction());
-		Intent lockscreenIntent = new Intent(context, LockscreenActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-		context.startActivity(lockscreenIntent);
-		LockscreenActivity.running = true;
+		Intent lockscreenIntent = new Intent(context, LockscreenActivity.class).setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+//		context.startActivity(lockscreenIntent);
+//		LockscreenActivity.running = true;
 	}
 }

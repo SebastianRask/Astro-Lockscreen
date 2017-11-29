@@ -1,14 +1,18 @@
 package net.nrask.voidlockscreen.activities;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import net.nrask.voidlockscreen.R;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.admin.DevicePolicyManager.ACTION_SET_NEW_PASSWORD;
@@ -18,6 +22,9 @@ public class SetupActivity extends AppCompatActivity {
             SYSTEM_LOCK_RESULT_CODE = 238,
             DATA_ACCESS_RESULT_CODE = 239;
 
+    @BindView(R.id.steps_recyclerview)
+    RecyclerView mStepsRecyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +32,7 @@ public class SetupActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-
+        setupRecyclerView();
     }
 
     @Override
@@ -39,6 +46,11 @@ public class SetupActivity extends AppCompatActivity {
             case DATA_ACCESS_RESULT_CODE:
                 break;
         }
+    }
+
+    private void setupRecyclerView() {
+        mStepsRecyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+
     }
 
     public void onClickEnableNotifications(View sender) {
