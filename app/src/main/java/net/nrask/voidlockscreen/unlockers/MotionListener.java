@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import net.nrask.voidlockscreen.activities.LockscreenActivity;
+import net.nrask.voidlockscreen.ui.LockscreenActivity;
 
 /**
  * Created by Sebastian Rask Jepsen (SRJ@Idealdev.dk) on 23/12/16.

@@ -21,7 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextClock;
 
 import net.nrask.voidlockscreen.R;
-import net.nrask.voidlockscreen.activities.LockscreenActivity;
+import net.nrask.voidlockscreen.ui.LockscreenActivity;
 import net.nrask.voidlockscreen.helpers.SRJHelper;
 import net.nrask.voidlockscreen.notifications.viewholders.MaterialNotificationViewHolder;
 

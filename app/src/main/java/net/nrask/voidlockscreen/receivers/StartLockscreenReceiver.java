@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import net.nrask.voidlockscreen.SRJService;
-import net.nrask.voidlockscreen.activities.LockscreenActivity;
-import net.nrask.voidlockscreen.helpers.SRJHelper;
+import net.nrask.voidlockscreen.ui.LockscreenActivity;
 
 /**
  * Created by Sebastian Rask on 19-12-2016.

@@ -1,4 +1,4 @@
-package net.nrask.voidlockscreen.activities;
+package net.nrask.voidlockscreen.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,7 @@ import android.widget.EditText;
 import net.nrask.voidlockscreen.R;
 import net.nrask.voidlockscreen.SRJService;
 import net.nrask.voidlockscreen.services.StartLockscreenService;
+import net.nrask.voidlockscreen.ui.Setup.SetupActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

@@ -2,7 +2,7 @@ package net.nrask.voidlockscreen.unlockers;
 
 import android.widget.RelativeLayout;
 
-import net.nrask.voidlockscreen.activities.LockscreenActivity;
+import net.nrask.voidlockscreen.ui.LockscreenActivity;
 
 /**
  * Created by Sebastian Rask on 20-12-2016.

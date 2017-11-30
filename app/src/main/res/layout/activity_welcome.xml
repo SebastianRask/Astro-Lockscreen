@@ -10,7 +10,7 @@
     android:padding="@dimen/default_margin_large"
     android:background="?attr/colorPrimary"
     android:orientation="vertical"
-    tools:context="net.nrask.voidlockscreen.activities.WelcomeActivity">
+    tools:context="net.nrask.voidlockscreen.ui.WelcomeActivity">
 
     <FrameLayout
         android:layout_weight="3"

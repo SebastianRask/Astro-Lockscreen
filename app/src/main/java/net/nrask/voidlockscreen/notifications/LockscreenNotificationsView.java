@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
-import net.nrask.voidlockscreen.activities.LockscreenActivity;
+import net.nrask.voidlockscreen.ui.LockscreenActivity;
 import net.nrask.voidlockscreen.services.NotificationReaderService;
 import net.nrask.voidlockscreen.unlockers.MotionListener;
 

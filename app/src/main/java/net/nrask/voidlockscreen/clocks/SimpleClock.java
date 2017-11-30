@@ -8,7 +8,7 @@ import android.widget.TextClock;
 import android.widget.TextView;
 
 import net.nrask.voidlockscreen.R;
-import net.nrask.voidlockscreen.activities.LockscreenActivity;
+import net.nrask.voidlockscreen.ui.LockscreenActivity;
 import net.nrask.voidlockscreen.helpers.SRJHelper;
 
 import java.util.Calendar;

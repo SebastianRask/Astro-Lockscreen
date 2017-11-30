@@ -1,14 +1,12 @@
 package net.nrask.voidlockscreen.unlockers;
 
 import android.animation.Animator;
-import android.app.Activity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
-import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
@@ -17,7 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import net.nrask.voidlockscreen.R;
-import net.nrask.voidlockscreen.activities.LockscreenActivity;
+import net.nrask.voidlockscreen.ui.LockscreenActivity;
 import net.nrask.voidlockscreen.helpers.SRJHelper;
 
 /**

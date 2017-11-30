@@ -1,4 +1,4 @@
-package net.nrask.voidlockscreen.activities;
+package net.nrask.voidlockscreen.ui;
 
 import android.Manifest;
 import android.animation.Animator;

@@ -21,20 +21,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.LockscreenActivity"
+            android:name=".ui.LockscreenActivity"
             android:launchMode="singleTop"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.Transparent"/>
-        <activity android:name=".activities.StartUpActivity"/>
-        <activity android:name=".activities.WelcomeActivity">
+        <activity android:name=".ui.StartUpActivity"/>
+        <activity android:name=".ui.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.SetupActivity"/>
+        <activity android:name=".ui.Setup.SetupActivity"/>
 
         <receiver android:name=".receivers.StartLockscreenReceiver">
             <intent-filter>
