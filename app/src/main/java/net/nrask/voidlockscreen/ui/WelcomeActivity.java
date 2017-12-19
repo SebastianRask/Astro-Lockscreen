@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import net.nrask.voidlockscreen.R;
-import net.nrask.voidlockscreen.SRJService;
+import net.nrask.voidlockscreen.helpers.SRJHelper;
 import net.nrask.voidlockscreen.services.StartLockscreenService;
-import net.nrask.voidlockscreen.ui.Setup.SetupActivity;
+import net.nrask.voidlockscreen.ui.setup.SetupActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -34,7 +34,7 @@ public class WelcomeActivity extends AppCompatActivity implements TextWatcher {
 
 		ButterKnife.bind(this);
 
-		if (!SRJService.isServiceRunning(StartLockscreenService.class, getBaseContext())) {
+		if (!SRJHelper.isServiceRunning(StartLockscreenService.class, getBaseContext())) {
 			startService(new Intent(getBaseContext(), StartLockscreenService.class));
 		}
 

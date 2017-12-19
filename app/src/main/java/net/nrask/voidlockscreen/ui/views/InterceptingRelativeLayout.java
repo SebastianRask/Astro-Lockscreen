@@ -1,4 +1,4 @@
-package net.nrask.voidlockscreen.views;
+package net.nrask.voidlockscreen.ui.views;
 
 import android.content.Context;
 import android.os.Build;

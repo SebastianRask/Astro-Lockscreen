@@ -1,4 +1,4 @@
-package net.nrask.voidlockscreen.backgrounds;
+package net.nrask.voidlockscreen.ui.lockscreen.backgrounds;
 
 import android.app.Activity;
 import android.widget.RelativeLayout;

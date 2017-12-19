@@ -1,4 +1,4 @@
-package net.nrask.voidlockscreen.ui.Setup;
+package net.nrask.voidlockscreen.ui.setup;
 
 /**
  * Created by Sebastian on 30-11-2017.

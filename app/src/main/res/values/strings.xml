@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">0VoidLock</string>
+    <string name="app_name">Astro Lockscreen</string>
 
     <!-- Notifications -->
     <string name="notification_retrieved_extra">notificationsRetrievedExtra</string>
@@ -29,5 +29,11 @@
     <string name="txt_welcome">Welcome</string>
     <string name="action_lets_go">Let\'s go</string>
     <string name="setup_title">Let\'s get you setup</string>
+    <string name="setup_notification_title">Notification Access</string>
+    <string name="setup_notification_subtitle">Needed to show notifications</string>
+    <string name="setup_system_lock_title">Disable System Lockscreen</string>
+    <string name="setup_system_lock_subtitle">No reason to have two lockscreens</string>
+    <string name="setup_data_access_title">Data Access</string>
+    <string name="setup_data_access_subtitle">Make smarter</string>
 
 </resources>

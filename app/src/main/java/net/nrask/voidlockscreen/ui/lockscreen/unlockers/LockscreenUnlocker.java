@@ -1,4 +1,4 @@
-package net.nrask.voidlockscreen.unlockers;
+package net.nrask.voidlockscreen.ui.lockscreen.unlockers;
 
 import android.widget.RelativeLayout;
 

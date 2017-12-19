@@ -1,4 +1,4 @@
-package net.nrask.voidlockscreen.unlockers;
+package net.nrask.voidlockscreen.ui.lockscreen.unlockers;
 
 import android.animation.Animator;
 import android.support.v4.content.ContextCompat;

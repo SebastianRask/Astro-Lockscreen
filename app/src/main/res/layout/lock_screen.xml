@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <net.nrask.voidlockscreen.views.InterceptingRelativeLayout
+    <net.nrask.voidlockscreen.ui.views.InterceptingRelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         xmlns:android="http://schemas.android.com/apk/res/android">
@@ -28,6 +28,6 @@
 
         </HorizontalScrollView>
 
-    </net.nrask.voidlockscreen.views.InterceptingRelativeLayout>
+    </net.nrask.voidlockscreen.ui.views.InterceptingRelativeLayout>
 
 </RelativeLayout>

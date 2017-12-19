@@ -1,4 +1,4 @@
-package net.nrask.voidlockscreen.notifications;
+package net.nrask.voidlockscreen.ui.lockscreen.notifications;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,7 +12,7 @@ import android.widget.RelativeLayout;
 
 import net.nrask.voidlockscreen.ui.LockscreenActivity;
 import net.nrask.voidlockscreen.services.NotificationReaderService;
-import net.nrask.voidlockscreen.unlockers.MotionListener;
+import net.nrask.voidlockscreen.ui.lockscreen.unlockers.MotionListener;
 
 import java.util.ArrayList;
 import java.util.List;

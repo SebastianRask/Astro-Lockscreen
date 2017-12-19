@@ -1,10 +1,10 @@
-package net.nrask.voidlockscreen.clocks;
+package net.nrask.voidlockscreen.ui.lockscreen.clocks;
 
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
 
 import net.nrask.voidlockscreen.ui.LockscreenActivity;
-import net.nrask.voidlockscreen.unlockers.MotionListener;
+import net.nrask.voidlockscreen.ui.lockscreen.unlockers.MotionListener;
 
 import java.util.Calendar;
 import java.util.Locale;

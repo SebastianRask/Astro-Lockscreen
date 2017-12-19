@@ -1,4 +1,4 @@
-package net.nrask.voidlockscreen.notifications;
+package net.nrask.voidlockscreen.ui.lockscreen.notifications;
 
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -23,7 +23,7 @@ import android.widget.TextClock;
 import net.nrask.voidlockscreen.R;
 import net.nrask.voidlockscreen.ui.LockscreenActivity;
 import net.nrask.voidlockscreen.helpers.SRJHelper;
-import net.nrask.voidlockscreen.notifications.viewholders.MaterialNotificationViewHolder;
+import net.nrask.voidlockscreen.ui.lockscreen.notifications.viewholders.MaterialNotificationViewHolder;
 
 import java.util.Calendar;
 import java.util.Locale;

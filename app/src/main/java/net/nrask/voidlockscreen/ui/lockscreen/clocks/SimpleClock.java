@@ -1,4 +1,4 @@
-package net.nrask.voidlockscreen.clocks;
+package net.nrask.voidlockscreen.ui.lockscreen.clocks;
 
 import android.content.Context;
 import android.view.View;

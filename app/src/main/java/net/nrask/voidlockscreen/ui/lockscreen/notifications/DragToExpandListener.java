@@ -1,10 +1,10 @@
-package net.nrask.voidlockscreen.notifications;
+package net.nrask.voidlockscreen.ui.lockscreen.notifications;
 
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import net.nrask.voidlockscreen.notifications.viewholders.ExpandableCell;
+import net.nrask.voidlockscreen.ui.lockscreen.notifications.viewholders.ExpandableCell;
 
 /**
  * Created by Sebastian Rask on 11-02-2017.

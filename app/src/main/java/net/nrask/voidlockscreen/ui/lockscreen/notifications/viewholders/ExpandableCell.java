@@ -1,4 +1,4 @@
-package net.nrask.voidlockscreen.notifications.viewholders;
+package net.nrask.voidlockscreen.ui.lockscreen.notifications.viewholders;
 
 import android.view.View;
 

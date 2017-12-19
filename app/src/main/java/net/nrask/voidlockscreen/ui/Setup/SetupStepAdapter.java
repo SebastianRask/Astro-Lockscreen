@@ -1,4 +1,4 @@
-package net.nrask.voidlockscreen.ui.Setup;
+package net.nrask.voidlockscreen.ui.setup;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,7 +21,7 @@ public class SetupStepAdapter extends RecyclerView.Adapter<SetupStepVH> {
     public SetupStepAdapter(List<SetupStep> steps, Callback callback) {
         this.steps = steps;
         this.callback = callback;
-
+        setHasStableIds(true);
         notifyDataSetChanged();
     }
 
@@ -29,7 +29,7 @@ public class SetupStepAdapter extends RecyclerView.Adapter<SetupStepVH> {
     public SetupStepVH onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater
                 .from(parent.getContext())
-                .inflate(R.layout.notification_cell_material, parent, false);
+                .inflate(R.layout.cell_setup_step, parent, false);
 
 
         final SetupStepVH vh = new SetupStepVH(itemView);
@@ -49,12 +49,17 @@ public class SetupStepAdapter extends RecyclerView.Adapter<SetupStepVH> {
     @Override
     public void onBindViewHolder(SetupStepVH holder, int position) {
         SetupStep step = steps.get(position);
-        holder.bindData(step);
+        holder.bindData(step, currentStep == position);
     }
 
     @Override
     public int getItemCount() {
         return steps.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return steps.get(position).getId();
     }
 
     void nextStep() {
@@ -65,6 +70,12 @@ public class SetupStepAdapter extends RecyclerView.Adapter<SetupStepVH> {
         steps.get(currentStep).setDone(true);
         currentStep++;
 
+        notifyItemChanged(currentStep - 1);
+        notifyItemChanged(currentStep);
+    }
+
+    void reset() {
+        currentStep = 0;
         notifyDataSetChanged();
     }
 
