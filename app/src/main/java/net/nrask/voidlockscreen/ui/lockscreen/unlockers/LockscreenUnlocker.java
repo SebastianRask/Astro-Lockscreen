@@ -9,18 +9,25 @@ import net.nrask.voidlockscreen.ui.LockscreenActivity;
  */
 
 public abstract class LockscreenUnlocker extends MotionListener {
+	private UnlockerCallback mCallback;
 
-	public LockscreenUnlocker(RelativeLayout lockscreenContainer, LockscreenActivity context) {
-		super(lockscreenContainer, context);
+	public LockscreenUnlocker(RelativeLayout lockscreenContainer, UnlockerCallback callback) {
+		super(lockscreenContainer);
+		this.mCallback = callback;
 	}
 
 	protected void unlock() {
-		if (activity != null) {
-			activity.unlock();
+		if (mCallback == null) {
+			return;
 		}
+		mCallback.onRequestUnlock();
 	}
 
 	public void unlockNoTouch() {
 		unlock();
+	}
+
+	public interface UnlockerCallback {
+		void onRequestUnlock();
 	}
 }

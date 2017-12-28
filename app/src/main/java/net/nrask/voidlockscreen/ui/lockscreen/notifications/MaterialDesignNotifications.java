@@ -21,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextClock;
 
 import net.nrask.voidlockscreen.R;
-import net.nrask.voidlockscreen.ui.LockscreenActivity;
 import net.nrask.voidlockscreen.helpers.SRJHelper;
 import net.nrask.voidlockscreen.ui.lockscreen.notifications.viewholders.MaterialNotificationViewHolder;
 
@@ -32,21 +31,22 @@ import java.util.Locale;
  * Created by Sebastian Rask Jepsen (SRJ@Idealdev.dk) on 27/12/16.
  */
 
-public class MaterialDesignNotifications extends LockscreenNotificationsView {
+//TODO: Need refactor. This is too tightly coupled with activity
+public class MaterialDesignNotifications extends LockscreenNotificationsController {
 	private boolean isExpanded = false;
 	private final int MAX_NOTIFICATIONS_UNEXPANDED = 3; // TODO calculate how much space there are for notifications
 	private TextClock mClock;
 
-	public MaterialDesignNotifications(RelativeLayout lockscreenContainer, final LockscreenActivity activity) {
-		super(lockscreenContainer, activity);
-		View.inflate(activity, R.layout.notification_material, lockscreenContainer);
+	public MaterialDesignNotifications(RelativeLayout lockscreenContainer) {
+		super(lockscreenContainer);
+		View.inflate(mContext, R.layout.notification_material, lockscreenContainer);
 		RecyclerView mNotificationsRecyclerView = lockscreenContainer.findViewById(R.id.notifications_recyclerview);
 		mClock = lockscreenContainer.findViewById(R.id.text_clock);
 
-		mNotificationsRecyclerView.setLayoutManager(new LinearLayoutManager(activity));
+		mNotificationsRecyclerView.setLayoutManager(new LinearLayoutManager(mContext));
 		mNotificationsRecyclerView.setAdapter(mAdapter = new MaterialNotificationAdapter());
 		mNotificationsRecyclerView.addOnItemTouchListener((RecyclerView.OnItemTouchListener) mAdapter);
-		mNotificationsRecyclerView.setTranslationY((int) (SRJHelper.getScreenHeight(activity)/2.7)); // TODO get position another way
+		mNotificationsRecyclerView.setTranslationY((int) (SRJHelper.getScreenHeight(mContext)/2.7)); // TODO get position another way
 		mNotificationsRecyclerView.setItemAnimator(null);
 	}
 
@@ -63,7 +63,7 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 				@Override
 				public void onGlobalLayout() {
 					viewHolder.itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-					viewHolder.setCollapsedHeight((int) activity.getResources().getDimension(R.dimen.notification_cell_material_height));
+					viewHolder.setCollapsedHeight((int) mContext.getResources().getDimension(R.dimen.notification_cell_material_height));
 					viewHolder.setExpandedHeight(viewHolder.itemView.getHeight());
 
 					viewHolder.getContainer().setLayoutParams(
@@ -80,7 +80,7 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 		@Override
 		public void onViewRecycled(MaterialNotificationViewHolder holder) {
 			super.onViewRecycled(holder);
-			holder.itemView.getLayoutParams().height = (int) activity.getResources().getDimension(R.dimen.notification_cell_material_height);
+			holder.itemView.getLayoutParams().height = (int) mContext.getResources().getDimension(R.dimen.notification_cell_material_height);
 		}
 
 		@Override
@@ -97,7 +97,7 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 				public void onClick(View view) {
 					try {
 						statusBarNotification.getNotification().contentIntent.send();
-						activity.unlockNoTouch(); //ToDo Dont directly unlock. Show security screen if needed
+						//TODO: Unlock
 					} catch (PendingIntent.CanceledException e) {
 						e.printStackTrace();
 					}
@@ -146,11 +146,11 @@ public class MaterialDesignNotifications extends LockscreenNotificationsView {
 
 			try {
 				Bitmap bmp = notificationLargeIcon;
-				Drawable icon = activity.createPackageContext(statusBarNotification.getPackageName(), 0).getResources().getDrawable(notificationSmallIconRes);
+				Drawable icon = mContext.createPackageContext(statusBarNotification.getPackageName(), 0).getResources().getDrawable(notificationSmallIconRes);
 				if(bmp == null && icon != null) {
 					bmp = ((BitmapDrawable) icon).getBitmap();
 
-					int paddingPx = SRJHelper.dpToPixels(activity, 10);
+					int paddingPx = SRJHelper.dpToPixels(mContext, 10);
 					holder.mNotificationIcon.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
 				}
 

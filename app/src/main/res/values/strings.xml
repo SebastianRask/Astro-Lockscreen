@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Astro Lockscreen</string>
 
+    <!-- Errors -->
+    <string name="error_generic">Oops, something went wrong. Please try again.</string>
+    <string name="error_lockscreen_not_shown">The lockscreen could not be shown. </string>
+
     <!-- Notifications -->
     <string name="notification_retrieved_extra">notificationsRetrievedExtra</string>
 
@@ -16,13 +20,6 @@
     <string name="font_roboto_condensed">sans-serif-condensed</string>
 
     <!-- Days of week -->
-    <string name="day_monday">monday</string>
-    <string name="day_tuesday">tuesday</string>
-    <string name="day_wednesday">wednesday</string>
-    <string name="day_thursday">thursday</string>
-    <string name="day_friday">friday</string>
-    <string name="day_saturday">saturday</string>
-    <string name="day_sunday">sunday</string>
     <string name="muzei_wallpaper_storage_key">muzeiwallpaper</string>
     <string name="action_done">Done</string>
     <string name="welcome_hint_name">What should we call you?</string>

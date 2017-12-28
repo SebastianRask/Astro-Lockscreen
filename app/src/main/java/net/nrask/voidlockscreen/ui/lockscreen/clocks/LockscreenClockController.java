@@ -13,10 +13,10 @@ import java.util.Locale;
  * Created by Sebastian Rask Jepsen (SRJ@Idealdev.dk) on 26/12/16.
  */
 
-public abstract class LockscreenClock extends MotionListener {
+public abstract class LockscreenClockController extends MotionListener {
 
-	public LockscreenClock(RelativeLayout lockscreenContainer, LockscreenActivity activity) {
-		super(lockscreenContainer, activity);
+	public LockscreenClockController(RelativeLayout lockscreenContainer) {
+		super(lockscreenContainer);
 	}
 
 	@Override

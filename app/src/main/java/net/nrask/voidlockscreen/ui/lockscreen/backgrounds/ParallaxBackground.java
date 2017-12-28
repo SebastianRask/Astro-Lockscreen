@@ -33,7 +33,7 @@ import static android.content.Context.SENSOR_SERVICE;
  * Created by Sebastian Rask Jepsen (SRJ@Idealdev.dk) on 23/12/16.
  */
 
-public class ParallaxBackground extends LockscreenBackground implements SensorEventListener {
+public class ParallaxBackground extends LockscreenBackgroundController implements SensorEventListener {
 	private SensorManager sensorManager;
 
 	private final float PARALLAX_FACTOR = 0.03f;
@@ -43,27 +43,28 @@ public class ParallaxBackground extends LockscreenBackground implements SensorEv
 	private ImageView backgroundImage;
 	private HorizontalScrollView scrollView;
 
-	public ParallaxBackground(final Activity activity, RelativeLayout lockscreenContainer) {
-		super(activity, lockscreenContainer);
+	public ParallaxBackground(RelativeLayout lockscreenContainer) {
+		super(lockscreenContainer);
 		this.lockscreenContainer = lockscreenContainer;
 
-		sensorManager = (SensorManager) activity.getSystemService(SENSOR_SERVICE);
+		Context context = lockscreenContainer.getContext();
+		sensorManager = (SensorManager) context.getSystemService(SENSOR_SERVICE);
 		backgroundImage = lockscreenContainer.findViewById(R.id.background_image);
 		scrollView = lockscreenContainer.findViewById(R.id.scrollView);
 
-		setMuzeiAsBackground(activity);
-//		setSystemAsBackground(activity);
+//		setMuzeiAsBackground(context);
+		setSystemAsBackground(context);
 	}
 
 	@Override
-	public void activityResumed() {
-		super.activityResumed();
-		sensorManager.registerListener(this, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_FASTEST);
+	protected void resume() {
+		sensorManager.registerListener(this,
+				sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+				SensorManager.SENSOR_DELAY_FASTEST);
 	}
 
 	@Override
-	public void activityPaused() {
-		super.activityPaused();
+	protected void pause() {
 		sensorManager.unregisterListener(this);
 	}
 

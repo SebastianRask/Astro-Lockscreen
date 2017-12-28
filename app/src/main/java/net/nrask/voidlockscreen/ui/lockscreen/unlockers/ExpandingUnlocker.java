@@ -15,37 +15,35 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 import net.nrask.voidlockscreen.R;
-import net.nrask.voidlockscreen.ui.LockscreenActivity;
 import net.nrask.voidlockscreen.helpers.SRJHelper;
 
 /**
  * Created by Sebastian Rask on 20-12-2016.
  */
 
-public class AcDisplayLockscreen extends LockscreenUnlocker {
+public class ExpandingUnlocker extends LockscreenUnlocker {
 	private View unlockView, imgLock;
 	private ViewPropertyAnimator scaleAnimator;
 	private FrameLayout dimView;
 
 	private int originalX, originalY;
 	private int unlockDistance;
-	private float maxAlpha = 0.6f;
 	private boolean hasVibrated = false;
 	private boolean unlockOnUp = false;
 
-	public AcDisplayLockscreen(RelativeLayout lockscreenContainer, LockscreenActivity context) {
-		super(lockscreenContainer, context);
-		unlockDistance = context.getResources().getDimensionPixelSize(R.dimen.lockscreen_ac_display_unlock_distance);
+	public ExpandingUnlocker(RelativeLayout lockscreenContainer, LockscreenUnlocker.UnlockerCallback callback) {
+		super(lockscreenContainer, callback);
+		unlockDistance = mContext.getResources().getDimensionPixelSize(R.dimen.lockscreen_ac_display_unlock_distance);
 
-		dimView = new FrameLayout(context);
+		dimView = new FrameLayout(mContext);
 		dimView.setLayoutParams(new ViewGroup.LayoutParams(
 				ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
 		));
-		dimView.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
+		dimView.setBackgroundColor(ContextCompat.getColor(mContext, R.color.white));
 		dimView.setAlpha(0f);
 		lockscreenContainer.addView(dimView);
 
-		View.inflate(context, R.layout.unlocker_ac_display, lockscreenContainer);
+		View.inflate(mContext, R.layout.unlocker_ac_display, lockscreenContainer);
 		imgLock = lockscreenContainer.findViewById(R.id.img_unlock_lock);
 		imgLock.setScrollX(0);
 		imgLock.setScrollY(0);
@@ -85,13 +83,14 @@ public class AcDisplayLockscreen extends LockscreenUnlocker {
 
 		unlockOnUp = distance > unlockDistance;
 		if (unlockOnUp && !hasVibrated) {
-			SRJHelper.vibrate(20, activity);
+			SRJHelper.vibrate(20, mContext);
 			hasVibrated = true;
 		}
 
-		float scale = distance/(activity.getResources().getDimensionPixelSize(R.dimen.lockscreen_ac_display_unlock_distance_max));
+		float scale = distance/(mContext.getResources().getDimensionPixelSize(R.dimen.lockscreen_ac_display_unlock_distance_max));
 
-		dimView.animate().alpha(scale/maxAlpha).setDuration(0).start();
+		final float MAX_ALPHA = 0.6f;
+		dimView.animate().alpha(scale/ MAX_ALPHA).setDuration(0).start();
 
 		Interpolator customInterpolator = PathInterpolatorCompat.create(0.080f, 1.80f, 0.590f, 1.70f);
 		scale = customInterpolator.getInterpolation(scale);
@@ -118,7 +117,7 @@ public class AcDisplayLockscreen extends LockscreenUnlocker {
 
 	@Override
 	protected void unlock() {
-		int size = (int) (SRJHelper.getScreenHeight(activity) * 2);
+		int size = SRJHelper.getScreenHeight(mContext) * 2;
 		int duration = 440;
 		int alphaDuration = 340;
 
@@ -133,12 +132,12 @@ public class AcDisplayLockscreen extends LockscreenUnlocker {
 
 			@Override
 			public void onAnimationEnd(Animator animator) {
-				AcDisplayLockscreen.super.unlock();
+				ExpandingUnlocker.super.unlock();
 			}
 
 			@Override
 			public void onAnimationCancel(Animator animator) {
-				AcDisplayLockscreen.super.unlock();
+				ExpandingUnlocker.super.unlock();
 			}
 
 			@Override

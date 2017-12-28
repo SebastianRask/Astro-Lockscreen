@@ -8,7 +8,6 @@ import android.widget.TextClock;
 import android.widget.TextView;
 
 import net.nrask.voidlockscreen.R;
-import net.nrask.voidlockscreen.ui.LockscreenActivity;
 import net.nrask.voidlockscreen.helpers.SRJHelper;
 
 import java.util.Calendar;
@@ -17,31 +16,31 @@ import java.util.Calendar;
  * Created by Sebastian Rask Jepsen (SRJ@Idealdev.dk) on 26/12/16.
  */
 
-public class SimpleClock extends LockscreenClock {
+public class SimpleClock extends LockscreenClockController {
 
-	public SimpleClock(RelativeLayout lockscreenContainer, final LockscreenActivity activity) {
-		super(lockscreenContainer, activity);
+	public SimpleClock(RelativeLayout lockscreenContainer) {
+		super(lockscreenContainer);
 
-		View.inflate(activity, R.layout.clock_simple, lockscreenContainer);
+		View.inflate(mContext, R.layout.clock_simple, lockscreenContainer);
 
 		final RelativeLayout mClockContainer = lockscreenContainer.findViewById(R.id.clock_container);
 		TextClock mTextClock = lockscreenContainer.findViewById(R.id.text_clock);
 		TextView mAmPmIndicator = lockscreenContainer.findViewById(R.id.text_am_pm_indicator);
 		TextView mTextDate = lockscreenContainer.findViewById(R.id.text_date);
 
-		setupClockViews(mTextClock, mAmPmIndicator, mClockContainer, activity);
-		setupTextDate(mTextDate, activity);
+		setupClockViews(mTextClock, mAmPmIndicator, mClockContainer);
+		setupTextDate(mTextDate, mContext);
 	}
 
-	private void setupClockViews(final TextView mainClock, TextView amPmIndicator, final View clockContainer, final Context context) {
-		//ToDo: find way to align top of this view with textclock
+	private void setupClockViews(final TextView mainClock, TextView amPmIndicator, final View clockContainer) {
+		//ToDo: Need align top of this view with textclock
 		//mAmPmIndicator.setVisibility(mTextClock.is24HourModeEnabled() ? View.GONE : View.VISIBLE);
 
 		mainClock.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 			@Override
 			public void onGlobalLayout() {
 				mainClock.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-				clockContainer.setTranslationY(SRJHelper.getScreenHeight(context)/5 - clockContainer.getHeight()/2);
+				clockContainer.setTranslationY(SRJHelper.getScreenHeight(mContext)/5 - clockContainer.getHeight()/2);
 
 			}
 		});

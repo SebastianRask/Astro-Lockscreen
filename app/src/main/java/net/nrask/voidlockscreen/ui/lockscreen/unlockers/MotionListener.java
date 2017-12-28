@@ -1,23 +1,22 @@
 package net.nrask.voidlockscreen.ui.lockscreen.unlockers;
 
+import android.content.Context;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
-import net.nrask.voidlockscreen.ui.LockscreenActivity;
 
 /**
  * Created by Sebastian Rask Jepsen (SRJ@Idealdev.dk) on 23/12/16.
  */
 
 public abstract class MotionListener {
-	private RelativeLayout lockscreenContainer;
-	protected LockscreenActivity activity;
+	private RelativeLayout mLockscreenContainer;
+	protected Context mContext;
 
-	public MotionListener(RelativeLayout lockscreenContainer, LockscreenActivity activity) {
-		this.lockscreenContainer = lockscreenContainer;
-		this.activity = activity;
+	public MotionListener(RelativeLayout lockscreenContainer) {
+		this.mLockscreenContainer = lockscreenContainer;
+		this.mContext = lockscreenContainer.getContext();
 	}
 
 	public abstract void onUserTouchDown(MotionEvent motionEvent);
